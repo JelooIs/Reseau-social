@@ -28,4 +28,12 @@ Class User {
         $stmt->execute([':email' => $email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function verify($email, $password) {
+        $user = $this->findByEmail($email);
+        if ($user && password_verify($password, $user['password'])) {
+            return $user;
+        }
+        return false;
+    }
 }

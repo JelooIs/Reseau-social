@@ -3,22 +3,20 @@ require_once 'models/Message.php';
 
 class HomeController {
     public function index() {
+        session_start();
         $messageModel = new Message();
         $message = '';
 
-        if (isset($_POST['envoyer'])) {
-            if (!empty($_POST['nom']) && !empty($_POST['prenoms']) && !empty($_POST['message'])) {
-                $nom = htmlspecialchars($_POST['nom']);
-                $prenoms = htmlspecialchars($_POST['prenoms']);
+        if (isset($_POST['envoyer']) && isset($_SESSION['user'])) {
+            if (!empty($_POST['message'])) {
+                $user_id = $_SESSION['user']['id'];
                 $msg = htmlspecialchars($_POST['message']);
-
-                $messageModel->create($nom, $prenoms, $msg);
+                $messageModel->create($user_id, $msg);
             }
         }
 
         $messages = $messageModel->all();
 
-        // Charger la vue
         require 'views/index.view.php';
     }
 }
