@@ -1,14 +1,18 @@
 <?php
-require_once 'models/Message.php';
+require_once __DIR__ . '/../src/Infrastructure/Message/MessageRepositoryAdapter.php';
+require_once __DIR__ . '/../src/UseCase/Message/CreateMessageUseCase.php';
+require_once __DIR__ . '/../src/UseCase/Message/EditMessageUseCase.php';
 
 class HomeController {
     public function index() {
         session_start();
-        $messageModel = new Message();
+        $repo = new MessageRepositoryAdapter();
+        $createUseCase = new CreateMessageUseCase($repo);
+        $editUseCase = new EditMessageUseCase($repo);
 
         // Suppression
         if (isset($_POST['delete']) && isset($_SESSION['user'])) {
-            $messageModel->delete($_POST['message_id']);
+            $repo->delete($_POST['message_id']);
         }
 
         // Modification
@@ -19,7 +23,7 @@ class HomeController {
                 $image = 'uploads/' . uniqid() . '_' . basename($_FILES['image']['name']);
                 move_uploaded_file($_FILES['image']['tmp_name'], $image);
             }
-            $messageModel->update($_POST['message_id'], $msg, $image);
+            $editUseCase->execute($_POST['message_id'], $msg, $image);
         }
 
         // Création
@@ -31,15 +35,15 @@ class HomeController {
                 $image = 'uploads/' . uniqid() . '_' . basename($_FILES['image']['name']);
                 move_uploaded_file($_FILES['image']['tmp_name'], $image);
             }
-            $messageModel->create($user_id, $msg, $image);
+            $createUseCase->execute($user_id, $msg, $image);
         }
 
         $limit = 10;
         $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
         $offset = ($page - 1) * $limit;
 
-        $messages = $messageModel->all($limit, $offset);
-        $totalMessages = $messageModel->count();
+        $messages = $repo->all($limit, $offset);
+        $totalMessages = $repo->count();
         $totalPages = ceil($totalMessages / $limit);
 
         require 'views/index.view.php';

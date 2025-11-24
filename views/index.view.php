@@ -6,15 +6,22 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body class="bg-light">
-    <div class="container mt-5">
-        <div class="mb-4">
-            <?php if (isset($_SESSION['user'])): ?>
-                <div class="alert alert-success">
-                    Bienvenue, <strong><?= htmlspecialchars($_SESSION['user']['prenoms']) ?></strong> !
-                    <a href="index.php?action=logout" class="btn btn-outline-danger btn-sm float-end" data-bs-toggle="modal" data-bs-target="#logoutModal">Déconnexion</a>
-                </div>
+  <div class="container mt-5">
+    <div class="mb-4">
+      <?php if (isset($_SESSION['user'])): ?>
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="alert alert-success mb-0 w-100">
+            Bienvenue, <strong><?= htmlspecialchars($_SESSION['user']['prenoms']) ?></strong> !
+          </div>
+          <div class="ms-3">
+            <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
+              <a href="index.php?action=admin" class="btn btn-dark btn-sm me-2">Admin</a>
             <?php endif; ?>
+            <a href="#" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#logoutModal">Déconnexion</a>
+          </div>
         </div>
+      <?php endif; ?>
+    </div>
 
         <?php if (isset($_SESSION['user'])): ?>
             <!-- Formulaire pour utilisateur connecté -->
@@ -46,7 +53,7 @@
                         <?php foreach ($messages as $msg): ?>
                             <li class="list-group-item">
                                 <strong><?= htmlspecialchars($msg['nom'] . ' ' . $msg['prenoms']) ?>:</strong>
-                                <?= htmlspecialchars($msg['message']) ?>
+                                <span id="msg-content-<?= $msg['id'] ?>"><?= htmlspecialchars($msg['message']) ?></span>
                                 <?php if (!empty($msg['image'])): ?>
                                     <br>
                                     <img src="<?= htmlspecialchars($msg['image']) ?>" alt="Image" style="max-width:150px;">
@@ -57,6 +64,32 @@
                                         <input type="hidden" name="message_id" value="<?= $msg['id'] ?>">
                                         <button type="submit" name="delete" class="btn btn-danger btn-sm">Supprimer</button>
                                     </form>
+                                    <!-- Edit button triggers modal -->
+                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editMsgModal<?= $msg['id'] ?>">Modifier</button>
+                                    <!-- Edit Modal -->
+                                    <div class="modal fade" id="editMsgModal<?= $msg['id'] ?>" tabindex="-1" aria-labelledby="editMsgModalLabel<?= $msg['id'] ?>" aria-hidden="true">
+                                      <div class="modal-dialog">
+                                        <div class="modal-content">
+                                          <form method="post" enctype="multipart/form-data">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="editMsgModalLabel<?= $msg['id'] ?>">Modifier le message</h5>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                              <input type="hidden" name="message_id" value="<?= $msg['id'] ?>">
+                                              <label for="edit-message-<?= $msg['id'] ?>" class="form-label">Message :</label>
+                                              <textarea name="message" id="edit-message-<?= $msg['id'] ?>" class="form-control" rows="3" required><?= htmlspecialchars($msg['message']) ?></textarea>
+                                              <label for="edit-image-<?= $msg['id'] ?>" class="form-label mt-2">Image (optionnelle) :</label>
+                                              <input type="file" name="image" id="edit-image-<?= $msg['id'] ?>" class="form-control">
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button type="submit" name="edit" class="btn btn-primary">Enregistrer</button>
+                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                            </div>
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
                                 <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
@@ -152,11 +185,14 @@
       </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        <?php if (isset($_GET['showLogin'])): ?>
-            var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-            loginModal.show();
-        <?php endif; ?>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    <?php if (isset($_GET['showLogin'])): ?>
+      document.addEventListener('DOMContentLoaded', function(){
+        var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+        loginModal.show();
+      });
+    <?php endif; ?>
+  </script>
     </body>
 </html>

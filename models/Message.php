@@ -4,7 +4,12 @@ require_once 'config/database.php';
 class Message {
     private $db;
 
-    public function __construct() {
+    // Allow injecting a PDO for testing; fallback to config/database.php for production
+    public function __construct($pdo = null) {
+        if ($pdo instanceof PDO) {
+            $this->db = $pdo;
+            return;
+        }
         $database = new Database();
         $this->db = $database->pdo;
     }
