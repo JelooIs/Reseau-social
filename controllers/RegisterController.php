@@ -1,23 +1,24 @@
 <?php
 Class RegisterController {
     public function register() {
-        if (isset($_POST['register'])) {
-            if (!empty($_POST['nom']) && !empty($_POST['prenoms']) && !empty($_POST['email']) && !empty($_POST['password'])) {
-                $nom = htmlspecialchars($_POST['nom']);
-                $prenoms = htmlspecialchars($_POST['prenoms']);
-                $email = htmlspecialchars($_POST['email']);
-                $password = htmlspecialchars($_POST['password']);
+        $userModel = new User();
+        $message = '';
 
-                $userModel = new User();
-                if ($userModel->findByEmail($email)) {
-                    $error = "Email déjà utilisé.";
-                } else {
-                    $userModel->create($nom, $prenoms, $email, $password);
-                    header('Location: login.php');
-                    exit();
-                }
+        if (isset($_POST['register'])) {
+            $nom = htmlspecialchars($_POST['nom']);
+            $prenoms = htmlspecialchars($_POST['prenoms']);
+            $email = htmlspecialchars($_POST['email']);
+            $password = $_POST['password'];
+
+            if ($userModel->findByEmail($email)) {
+                $message = "Cet email existe déjà.";
             } else {
-                $error = "Tous les champs sont requis.";
+                if ($userModel->create($nom, $prenoms, $email, $password)) {
+                    header('Location: index.php?showLogin=1');
+                    exit();
+                } else {
+                    $message = "Erreur lors de l'inscription.";
+                }
             }
         }
 
