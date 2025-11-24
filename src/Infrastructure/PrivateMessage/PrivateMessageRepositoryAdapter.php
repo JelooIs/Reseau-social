@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../Domain/PrivateMessage/PrivateMessageRepositoryInterface.php';
 require_once __DIR__ . '/../../../models/PrivateMessage.php';
 
 class PrivateMessageRepositoryAdapter implements PrivateMessageRepositoryInterface {

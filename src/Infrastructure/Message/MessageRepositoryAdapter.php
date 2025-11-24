@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../Domain/Message/MessageRepositoryInterface.php';
 require_once __DIR__ . '/../../../models/Message.php';
 
 class MessageRepositoryAdapter implements MessageRepositoryInterface {
