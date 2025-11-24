@@ -12,13 +12,17 @@ class LoginController {
                 $user = $userModel->verify($email, $password);
                 if ($user) {
                     session_start();
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['user_nom'] = $user['nom'];
-                    $_SESSION['user_prenoms'] = $user['prenoms'];
+                    $_SESSION['user'] = [
+                        'id' => $user['id'],
+                        'nom' => $user['nom'],
+                        'prenoms' => $user['prenoms'],
+                        'email' => $user['email'],
+                        'role' => $user['role']
+                    ];
                     header('Location: index.php');
                     exit();
                 } else {
-                    $error = "Email ou mot de passe incorrect.";
+                    $message = "Email ou mot de passe incorrect.";
                 }
             } else {
                 $error = "Tous les champs sont requis.";

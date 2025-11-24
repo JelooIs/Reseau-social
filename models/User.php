@@ -36,4 +36,10 @@ Class User {
         }
         return false;
     }
+
+    public function all() {
+        $sql = "SELECT * FROM users";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

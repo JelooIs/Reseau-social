@@ -1,0 +1,4 @@
+<?php
+$filename = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', basename($_FILES['image']['name']));
+$image = 'uploads/' . uniqid() . '_' . $filename;
+move_uploaded_file($_FILES['image']['tmp_name'], $image);
