@@ -6,7 +6,7 @@ require_once 'models/User.php';
 
 class PrivateMessageController {
     public function inbox() {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) { session_start(); } 
         if (!isset($_SESSION['user'])) {
             header('Location: index.php');
             exit();

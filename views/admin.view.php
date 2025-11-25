@@ -1,19 +1,16 @@
-<?php if (session_status() === PHP_SESSION_NONE) { session_start(); } ?>
+<?php // session started centrally in index.php ?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Admin - Gestion du réseau social</title>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 <div class="container mt-5">
+    <?php include __DIR__ . '/_nav.php'; ?>
     <h2 class="mb-4">Interface Admin</h2>
-    <a href="index.php" class="btn btn-secondary mb-3">Retour à l'accueil</a>
-
-    <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
-        <a href="index.php?action=admin" class="btn btn-dark btn-sm">Admin</a>
-    <?php endif; ?>
 
     <h4>Utilisateurs</h4>
     <table class="table table-bordered">
@@ -59,12 +56,12 @@
                 <td><?= htmlspecialchars($msg['message']) ?></td>
                 <td>
                     <?php if (!empty($msg['image'])): ?>
-                        <img src="<?= htmlspecialchars($msg['image']) ?>" style="max-width:80px;">
+                        <img src="<?= htmlspecialchars($msg['image']) ?>" class="pm-image-small">
                     <?php endif; ?>
                 </td>
                 <td><?= $msg['created_at'] ?></td>
                 <td>
-                    <form method="post" action="index.php?action=admin" style="display:inline;">
+                    <form method="post" action="index.php?action=admin" class="inline-form">
                         <input type="hidden" name="message_id" value="<?= $msg['id'] ?>">
                         <button type="submit" name="delete" class="btn btn-danger btn-sm">Supprimer</button>
                     </form>
@@ -74,6 +71,7 @@
         </tbody>
     </table>
 </div>
+<?php include __DIR__ . '/_logout_modal.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

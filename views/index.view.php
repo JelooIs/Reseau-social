@@ -4,24 +4,11 @@
         <title>Mini Réseau Social</title>
         <meta charset="UTF-8">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+      <link href="assets/css/style.css" rel="stylesheet">
     </head>
     <body class="bg-light">
   <div class="container mt-5">
-    <div class="mb-4">
-      <?php if (isset($_SESSION['user'])): ?>
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="alert alert-success mb-0 w-100">
-            Bienvenue, <strong><?= htmlspecialchars($_SESSION['user']['prenoms']) ?></strong> !
-          </div>
-          <div class="ms-3">
-            <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
-              <a href="index.php?action=admin" class="btn btn-dark btn-sm me-2">Admin</a>
-            <?php endif; ?>
-            <a href="#" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#logoutModal">Déconnexion</a>
-          </div>
-        </div>
-      <?php endif; ?>
-    </div>
+    <?php include __DIR__ . '/_nav.php'; ?>
 
         <?php if (isset($_SESSION['user'])): ?>
             <!-- Formulaire pour utilisateur connecté -->
@@ -55,12 +42,12 @@
                                 <strong><?= htmlspecialchars($msg['nom'] . ' ' . $msg['prenoms']) ?>:</strong>
                                 <span id="msg-content-<?= $msg['id'] ?>"><?= htmlspecialchars($msg['message']) ?></span>
                                 <?php if (!empty($msg['image'])): ?>
-                                    <br>
-                                    <img src="<?= htmlspecialchars($msg['image']) ?>" alt="Image" style="max-width:150px;">
+                                  <br>
+                                  <img src="<?= htmlspecialchars($msg['image']) ?>" alt="Image" class="pm-image">
                                 <?php endif; ?>
                                 <span class="text-muted float-end"><em><?= $msg['created_at'] ?></em></span>
                                 <?php if (isset($_SESSION['user']) && ($_SESSION['user']['id'] == $msg['user_id'] || $_SESSION['user']['role'] == 'admin')): ?>
-                                    <form method="post" style="display:inline;">
+                                    <form method="post" class="inline-form">
                                         <input type="hidden" name="message_id" value="<?= $msg['id'] ?>">
                                         <button type="submit" name="delete" class="btn btn-danger btn-sm">Supprimer</button>
                                     </form>
@@ -112,78 +99,7 @@
         <?php endif; ?>
     </div>
 
-    <!-- Fenêtre pop-up Connexion -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form method="post" action="index.php?action=login">
-            <div class="modal-header">
-              <h5 class="modal-title" id="loginModalLabel">Connexion</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-              <label for="email" class="form-label">Email:</label>
-              <input type="email" name="email" id="email" class="form-control" required>
-              <label for="password" class="form-label mt-2">Mot de passe:</label>
-              <input type="password" name="password" id="password" class="form-control" required>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" name="login" class="btn btn-primary">Se connecter</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Fenêtre pop-up Déconnexion -->
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form method="post" action="index.php?action=logout">
-            <div class="modal-header">
-              <h5 class="modal-title" id="logoutModalLabel">Déconnexion</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-              <p>Voulez-vous vraiment vous déconnecter ?</p>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-danger">Déconnexion</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Fenêtre pop-up Inscription -->
-    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form method="post" action="index.php?action=register">
-            <div class="modal-header">
-              <h5 class="modal-title" id="registerModalLabel">Inscription</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-              <label for="nom" class="form-label">Nom:</label>
-              <input type="text" name="nom" id="nom" class="form-control" required>
-              <label for="prenoms" class="form-label mt-2">Prénoms:</label>
-              <input type="text" name="prenoms" id="prenoms" class="form-control" required>
-              <label for="email" class="form-label mt-2">Email:</label>
-              <input type="email" name="email" id="email" class="form-control" required>
-              <label for="password" class="form-label mt-2">Mot de passe:</label>
-              <input type="password" name="password" id="password" class="form-control" required>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" name="register" class="btn btn-success">S'inscrire</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    <?php include __DIR__ . '/_auth_modals.php'; ?>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>

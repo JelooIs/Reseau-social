@@ -1,13 +1,16 @@
-<?php session_start(); ?>
+<?php // session started centrally in index.php ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>Messages Privés</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
  </head>
 <body class="bg-light">
 <div class="container mt-5">
+    <?php include __DIR__ . '/_nav.php'; ?>
+    <a href="index.php" class="btn btn-secondary mb-3">Retour à l'accueil</a>
     <h3>Messages privés</h3>
     <div class="row">
         <div class="col-md-4">
@@ -32,7 +35,7 @@
             <?php if ($partner): ?>
                 <h5>Conversation avec <?= htmlspecialchars($partner['nom'] . ' ' . $partner['prenoms']) ?></h5>
                 <div class="card mb-3">
-                    <div class="card-body" style="max-height:400px;overflow:auto;">
+                    <div class="card-body pm-card-body">
                         <?php foreach ($messages as $m): ?>
                                                         <div class="mb-2">
                                                                 <strong><?= htmlspecialchars($m['sender_nom'] . ' ' . $m['sender_prenoms']) ?></strong>
@@ -101,6 +104,7 @@
         </div>
     </div>
 </div>
+<?php include __DIR__ . '/_auth_modals.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

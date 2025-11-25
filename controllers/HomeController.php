@@ -5,7 +5,7 @@ require_once __DIR__ . '/../src/UseCase/Message/EditMessageUseCase.php';
 
 class HomeController {
     public function index() {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) { session_start(); } 
         $repo = new MessageRepositoryAdapter();
         $createUseCase = new CreateMessageUseCase($repo);
         $editUseCase = new EditMessageUseCase($repo);

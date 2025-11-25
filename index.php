@@ -1,4 +1,6 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); } 
+
 require_once 'controllers/HomeController.php';
 require_once 'controllers/RegisterController.php';
 require_once 'controllers/LoginController.php';
