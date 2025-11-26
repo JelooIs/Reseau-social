@@ -10,6 +10,16 @@
 <body class="bg-light">
 <div class="container mt-5">
     <?php include __DIR__ . '/_nav.php'; ?>
+    
+    <!-- Flash Messages -->
+    <?php if (isset($_SESSION['flash_message'])): ?>
+        <div class="alert alert-<?= htmlspecialchars($_SESSION['flash_type']) ?> alert-dismissible fade show" role="alert">
+            <?= htmlspecialchars($_SESSION['flash_message']) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <?php unset($_SESSION['flash_message'], $_SESSION['flash_type']); ?>
+    <?php endif; ?>
+    
     <a href="index.php" class="btn btn-secondary mb-3">Retour à l'accueil</a>
     <h3>Messages privés</h3>
     <div class="row">
@@ -17,14 +27,8 @@
             <h5>Conversations</h5>
             <ul class="list-group">
                 <?php foreach ($threads as $t): ?>
-                    <?php
-                        $partnerId = null;
-                        if (isset($t['sender_id']) && isset($_SESSION['user']['id'])) {
-                            $partnerId = ($t['sender_id'] == $_SESSION['user']['id']) ? $t['receiver_id'] : $t['sender_id'];
-                        }
-                    ?>
                     <li class="list-group-item">
-                        <a href="index.php?action=pm&with=<?= $partnerId ?>">
+                        <a href="index.php?action=pm&with=<?= htmlspecialchars($t['partner_id']) ?>">
                             <?= htmlspecialchars($t['nom'] . ' ' . $t['prenoms']) ?>
                         </a>
                     </li>
