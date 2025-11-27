@@ -9,6 +9,13 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
+          <?php if (isset($_SESSION['login_error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <?= htmlspecialchars($_SESSION['login_error'], ENT_QUOTES, 'UTF-8') ?>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <?php unset($_SESSION['login_error']); ?>
+          <?php endif; ?>
           <label for="email" class="form-label">Email:</label>
           <input type="email" name="email" id="email" class="form-control" required>
           <label for="password" class="form-label mt-2">Mot de passe:</label>
@@ -32,10 +39,15 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <label for="nom" class="form-label">Nom:</label>
-          <input type="text" name="nom" id="nom" class="form-control" required>
-          <label for="prenoms" class="form-label mt-2">Prénoms:</label>
-          <input type="text" name="prenoms" id="prenoms" class="form-control" required>
+          <?php if (isset($_SESSION['register_error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <?= htmlspecialchars($_SESSION['register_error'], ENT_QUOTES, 'UTF-8') ?>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <?php unset($_SESSION['register_error']); ?>
+          <?php endif; ?>
+          <label for="pseudo" class="form-label">Pseudo:</label>
+          <input type="text" name="pseudo" id="pseudo" class="form-control" required>
           <label for="email_reg" class="form-label mt-2">Email:</label>
           <input type="email" name="email" id="email_reg" class="form-control" required>
           <label for="password_reg" class="form-label mt-2">Mot de passe:</label>

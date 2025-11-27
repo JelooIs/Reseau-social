@@ -26,8 +26,8 @@ class Subject {
 
     // Get all subjects with pagination
     public function all($limit = 12, $offset = 0) {
-        $sql = "SELECT s.*, u.nom, u.prenoms FROM subjects s 
-                JOIN users u ON s.user_id = u.id 
+        $sql = "SELECT s.*, u.pseudo FROM subjects s 
+                    JOIN users u ON s.user_id = u.id 
                 ORDER BY s.created_at DESC 
                 LIMIT :limit OFFSET :offset";
         $stmt = $this->db->prepare($sql);
@@ -39,8 +39,8 @@ class Subject {
 
     // Get a single subject by ID
     public function findById($id) {
-        $sql = "SELECT s.*, u.nom, u.prenoms FROM subjects s 
-                JOIN users u ON s.user_id = u.id 
+        $sql = "SELECT s.*, u.pseudo FROM subjects s 
+                    JOIN users u ON s.user_id = u.id 
                 WHERE s.id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
@@ -62,8 +62,8 @@ class Subject {
 
     // Get subject creator info for warning notification
     public function getCreator($id) {
-        $sql = "SELECT s.user_id, u.email, u.nom, u.prenoms FROM subjects s 
-                JOIN users u ON s.user_id = u.id 
+        $sql = "SELECT s.user_id, u.email, u.pseudo FROM subjects s 
+                    JOIN users u ON s.user_id = u.id 
                 WHERE s.id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);

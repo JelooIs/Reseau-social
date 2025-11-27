@@ -20,10 +20,9 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $pdo->exec(
     "CREATE TABLE users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nom TEXT,
-        prenoms TEXT,
         email TEXT UNIQUE,
         password TEXT,
+        pseudo TEXT,
         role TEXT
     );"
 );

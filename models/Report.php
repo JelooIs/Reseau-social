@@ -37,8 +37,8 @@ class Report {
      * Get all reports with filters
      */
     public function all($limit = 50, $offset = 0, $status = null) {
-        $sql = "SELECT r.*, u.nom, u.prenoms FROM reports r
-                JOIN users u ON r.reporter_id = u.id";
+        $sql = "SELECT r.*, u.pseudo FROM reports r
+            JOIN users u ON r.reporter_id = u.id";
         
         if ($status) {
             $sql .= " WHERE r.status = :status";
@@ -82,9 +82,9 @@ class Report {
      * Get a report by ID
      */
     public function findById($id) {
-        $sql = "SELECT r.*, u.nom, u.prenoms FROM reports r
-                JOIN users u ON r.reporter_id = u.id
-                WHERE r.id = :id";
+        $sql = "SELECT r.*, u.pseudo FROM reports r
+            JOIN users u ON r.reporter_id = u.id
+            WHERE r.id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -135,9 +135,9 @@ class Report {
      * Get report details with target information
      */
     public function getReportWithTarget($id) {
-        $sql = "SELECT r.*, u.nom, u.prenoms FROM reports r
-                JOIN users u ON r.reporter_id = u.id
-                WHERE r.id = :id";
+        $sql = "SELECT r.*, u.pseudo FROM reports r
+            JOIN users u ON r.reporter_id = u.id
+            WHERE r.id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
         $report = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -146,7 +146,7 @@ class Report {
         
         // Get target details
         if ($report['type'] === 'subject') {
-            $targetSql = "SELECT s.*, u2.nom as creator_nom, u2.prenoms as creator_prenoms 
+            $targetSql = "SELECT s.*, u2.pseudo as creator_pseudo 
                          FROM subjects s
                          JOIN users u2 ON s.user_id = u2.id
                          WHERE s.id = :target_id";
@@ -154,7 +154,7 @@ class Report {
             $targetStmt->execute([':target_id' => $report['target_id']]);
             $report['target'] = $targetStmt->fetch(PDO::FETCH_ASSOC);
         } elseif ($report['type'] === 'comment') {
-            $targetSql = "SELECT c.*, u2.nom as creator_nom, u2.prenoms as creator_prenoms 
+            $targetSql = "SELECT c.*, u2.pseudo as creator_pseudo 
                          FROM comments c
                          JOIN users u2 ON c.user_id = u2.id
                          WHERE c.id = :target_id";

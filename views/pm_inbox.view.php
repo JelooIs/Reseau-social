@@ -7,20 +7,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
  </head>
-<body class="bg-light">
+<body class="<?= isset($_SESSION['user_preferences']) ? 'bg-' . htmlspecialchars($_SESSION['user_preferences']['background_mode'], ENT_QUOTES, 'UTF-8') : 'bg-light' ?>" <?php if (isset($_SESSION['user_preferences']) && $_SESSION['user_preferences']['background_mode'] === 'custom' && !empty($_SESSION['user_preferences']['custom_background_image'])): ?>style="background-image: url('<?= htmlspecialchars($_SESSION['user_preferences']['custom_background_image'], ENT_QUOTES, 'UTF-8') ?>'); background-size: cover; background-attachment: fixed; background-position: center;"<?php endif; ?>>
 <div class="container mt-5">
     <?php include __DIR__ . '/_nav.php'; ?>
     
     <!-- Flash Messages -->
     <?php if (isset($_SESSION['flash_message'])): ?>
-        <div class="alert alert-<?= htmlspecialchars($_SESSION['flash_type']) ?> alert-dismissible fade show" role="alert">
-            <?= htmlspecialchars($_SESSION['flash_message']) ?>
+        <div class="alert alert-<?= htmlspecialchars($_SESSION['flash_type'], ENT_QUOTES, 'UTF-8') ?> alert-dismissible fade show" role="alert">
+            <?= htmlspecialchars($_SESSION['flash_message'], ENT_QUOTES, 'UTF-8') ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <?php unset($_SESSION['flash_message'], $_SESSION['flash_type']); ?>
     <?php endif; ?>
     
-    <a href="index.php" class="btn btn-secondary mb-3">Retour à l'accueil</a>
+    <!-- Navigation Buttons -->
+    <div class="mb-4">
+        <a href="index.php" class="btn btn-secondary">🏠 Retour à l'Accueil</a>
+        <a href="index.php?action=subject" class="btn btn-info">📚 Catalogue de Sujets</a>
+    </div>
+    
     <h3>Messages privés</h3>
     <div class="row">
         <div class="col-md-4">
@@ -28,8 +33,8 @@
             <ul class="list-group">
                 <?php foreach ($threads as $t): ?>
                     <li class="list-group-item">
-                        <a href="index.php?action=pm&with=<?= htmlspecialchars($t['partner_id']) ?>">
-                            <?= htmlspecialchars($t['nom'] . ' ' . $t['prenoms']) ?>
+                        <a href="index.php?action=pm&with=<?= intval($t['partner_id']) ?>">
+                            <?= htmlspecialchars($t['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?>
                         </a>
                     </li>
                 <?php endforeach; ?>
@@ -37,13 +42,13 @@
         </div>
         <div class="col-md-8">
             <?php if ($partner): ?>
-                <h5>Conversation avec <?= htmlspecialchars($partner['nom'] . ' ' . $partner['prenoms']) ?></h5>
+                <h5>Conversation avec <?= htmlspecialchars($partner['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></h5>
                 <div class="card mb-3">
                     <div class="card-body pm-card-body">
                         <?php foreach ($messages as $m): ?>
                                                         <div class="mb-2">
-                                                                <strong><?= htmlspecialchars($m['sender_nom'] . ' ' . $m['sender_prenoms']) ?></strong>
-                                                                <div id="pm-msg-content-<?= $m['id'] ?>"><?= nl2br(htmlspecialchars($m['message'])) ?></div>
+                                                                <strong><?= htmlspecialchars($m['sender_pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></strong>
+                                                                <div id="pm-msg-content-<?= $m['id'] ?>"><?= nl2br(htmlspecialchars($m['message'], ENT_QUOTES, 'UTF-8')) ?></div>
                                                                 <small class="text-muted"><?= $m['created_at'] ?></small>
                                                                 <?php if (isset($_SESSION['user']) && ($_SESSION['user']['id'] == $m['sender_id'] || $_SESSION['user']['role'] == 'admin')): ?>
                                                                         <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editPmModal<?= $m['id'] ?>">Modifier</button>
@@ -59,7 +64,7 @@
                                                                                         <div class="modal-body">
                                                                                             <input type="hidden" name="pm_id" value="<?= $m['id'] ?>">
                                                                                             <label for="edit-pm-message-<?= $m['id'] ?>" class="form-label">Message :</label>
-                                                                                            <textarea name="pm_message_edit" id="edit-pm-message-<?= $m['id'] ?>" class="form-control" rows="3" required><?= htmlspecialchars($m['message']) ?></textarea>
+                                                                                            <textarea name="pm_message_edit" id="edit-pm-message-<?= $m['id'] ?>" class="form-control" rows="3" required><?= htmlspecialchars($m['message'], ENT_QUOTES, 'UTF-8') ?></textarea>
                                                                                         </div>
                                                                                         <div class="modal-footer">
                                                                                             <button type="submit" name="edit_pm" class="btn btn-primary">Enregistrer</button>

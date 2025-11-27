@@ -25,7 +25,7 @@ class Message {
     }
 
     public function all($limit = 10, $offset = 0){
-        $sql = "SELECT m.*, u.nom, u.prenoms FROM messages m JOIN users u ON m.user_id = u.id ORDER BY m.created_at DESC LIMIT :limit OFFSET :offset";
+        $sql = "SELECT m.*, u.pseudo FROM messages m JOIN users u ON m.user_id = u.id ORDER BY m.created_at DESC LIMIT :limit OFFSET :offset";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);

@@ -9,7 +9,7 @@
       <ul class="navbar-nav ms-auto align-items-center">
         <?php if (isset($_SESSION['user'])): ?>
           <li class="nav-item me-2">
-            <span class="nav-link mb-0">Bienvenue, <strong><?= htmlspecialchars($_SESSION['user']['prenoms']) ?></strong></span>
+            <span class="nav-link mb-0">Bienvenue, <strong><?= htmlspecialchars($_SESSION['user']['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></strong></span>
           </li>
           <li class="nav-item me-2">
             <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
@@ -18,6 +18,7 @@
             <?php else: ?>
               <a class="btn btn-outline-primary btn-sm btn-spacing" href="index.php?action=pm">Messages privés</a>
             <?php endif; ?>
+            <a class="btn btn-outline-secondary btn-sm btn-spacing" href="index.php?action=settings">⚙️ Paramètres</a>
           </li>
           <li class="nav-item">
             <a class="btn btn-outline-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Déconnexion</a>

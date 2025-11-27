@@ -24,7 +24,7 @@ class Comment {
     }
 
     public function allForSubject($subject_id, $limit = 50, $offset = 0) {
-        $sql = "SELECT c.*, u.nom, u.prenoms FROM comments c JOIN users u ON c.user_id = u.id WHERE c.subject_id = :subject_id ORDER BY c.created_at ASC LIMIT :limit OFFSET :offset";
+        $sql = "SELECT c.*, u.pseudo FROM comments c JOIN users u ON c.user_id = u.id WHERE c.subject_id = :subject_id ORDER BY c.created_at ASC LIMIT :limit OFFSET :offset";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':subject_id', $subject_id, PDO::PARAM_INT);
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);

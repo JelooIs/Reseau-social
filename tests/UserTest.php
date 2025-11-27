@@ -16,12 +16,13 @@ class UserTest extends TestCase {
     public function testCreateAndFindByEmailAndVerify() {
         $email = 'jane@example.test';
         $password = 'secret123';
-        $created = $this->userModel->create('Doe', 'Jane', $email, $password, 'user');
+        $pseudo = 'janedoe';
+        $created = $this->userModel->create($email, $password, $pseudo);
         $this->assertTrue((bool)$created, 'User creation should return true');
 
         $found = $this->userModel->findByEmail($email);
         $this->assertIsArray($found);
-        $this->assertEquals('Doe', $found['nom']);
+        $this->assertEquals($pseudo, $found['pseudo']);
 
         $verified = $this->userModel->verify($email, $password);
         $this->assertIsArray($verified);
@@ -30,7 +31,7 @@ class UserTest extends TestCase {
 
     public function testDeleteUser() {
         $email = 'delete@example.test';
-        $this->userModel->create('Del', 'User', $email, 'pw', 'user');
+        $this->userModel->create($email, 'pw', 'deluser');
         $found = $this->userModel->findByEmail($email);
         $this->assertNotEmpty($found);
         $deleted = $this->userModel->delete($found['id']);

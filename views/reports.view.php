@@ -7,22 +7,28 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body class="<?= isset($_SESSION['user_preferences']) ? 'bg-' . htmlspecialchars($_SESSION['user_preferences']['background_mode'], ENT_QUOTES, 'UTF-8') : 'bg-light' ?>" <?php if (isset($_SESSION['user_preferences']) && $_SESSION['user_preferences']['background_mode'] === 'custom' && !empty($_SESSION['user_preferences']['custom_background_image'])): ?>style="background-image: url('<?= htmlspecialchars($_SESSION['user_preferences']['custom_background_image'], ENT_QUOTES, 'UTF-8') ?>'); background-size: cover; background-attachment: fixed; background-position: center;"<?php endif; ?>>
 <div class="container mt-5">
     <?php include __DIR__ . '/_nav.php'; ?>
     
     <!-- Flash Messages -->
     <?php if (isset($_SESSION['flash_message'])): ?>
-        <div class="alert alert-<?= htmlspecialchars($_SESSION['flash_type']) ?> alert-dismissible fade show" role="alert">
-            <?= htmlspecialchars($_SESSION['flash_message']) ?>
+        <div class="alert alert-<?= htmlspecialchars($_SESSION['flash_type'], ENT_QUOTES, 'UTF-8') ?> alert-dismissible fade show" role="alert">
+            <?= htmlspecialchars($_SESSION['flash_message'], ENT_QUOTES, 'UTF-8') ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <?php unset($_SESSION['flash_message'], $_SESSION['flash_type']); ?>
     <?php endif; ?>
 
+    <!-- Navigation Buttons -->
+    <div class="mb-4">
+        <a href="index.php" class="btn btn-secondary">🏠 Retour à l'Accueil</a>
+        <a href="index.php?action=subject" class="btn btn-info">📚 Catalogue de Sujets</a>
+        <a href="index.php?action=admin" class="btn btn-danger">🛡️ Tableau de Bord Admin</a>
+    </div>
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3>Gestion des Signalements</h3>
-        <a href="index.php?action=admin" class="btn btn-secondary">Retour au Tableau de Bord</a>
     </div>
 
     <!-- Filter by Status -->
@@ -53,14 +59,14 @@
                 <tbody>
                     <?php foreach ($reports as $report): ?>
                         <tr>
-                            <td><?= htmlspecialchars($report['id']) ?></td>
+                            <td><?= htmlspecialchars($report['id'], ENT_QUOTES, 'UTF-8') ?></td>
                             <td>
                                 <span class="badge <?= $report['type'] === 'subject' ? 'bg-info' : 'bg-secondary' ?>">
                                     <?= $report['type'] === 'subject' ? 'Sujet' : 'Commentaire' ?>
                                 </span>
                             </td>
-                            <td><?= htmlspecialchars($report['prenoms'] . ' ' . $report['nom']) ?></td>
-                            <td><?= htmlspecialchars(substr($report['reason'], 0, 50)) . (strlen($report['reason']) > 50 ? '...' : '') ?></td>
+                            <td><?= htmlspecialchars($report['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars(substr($report['reason'], 0, 50), ENT_QUOTES, 'UTF-8') . (strlen($report['reason']) > 50 ? '...' : '') ?></td>
                             <td>
                                 <span class="badge <?= 
                                     $report['status'] === 'pending' ? 'bg-warning' : 
@@ -86,16 +92,16 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="reportModalLabel<?= $report['id'] ?>">
-                                Détails du Signalement #<?= htmlspecialchars($report['id']) ?>
+                                Détails du Signalement #<?= htmlspecialchars($report['id'], ENT_QUOTES, 'UTF-8') ?>
                             </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <h6>Informations du Signalement</h6>
                             <p>
-                                <strong>Signalant:</strong> <?= htmlspecialchars($report['prenoms'] . ' ' . $report['nom']) ?><br>
+                                <strong>Signalant:</strong> <?= htmlspecialchars($report['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?><br>
                                 <strong>Type:</strong> <?= $report['type'] === 'subject' ? 'Sujet' : 'Commentaire' ?><br>
-                                <strong>Date:</strong> <?= htmlspecialchars($report['created_at']) ?><br>
+                                <strong>Date:</strong> <?= htmlspecialchars($report['created_at'], ENT_QUOTES, 'UTF-8') ?><br>
                                 <strong>Statut:</strong> 
                                 <span class="badge <?= 
                                     $report['status'] === 'pending' ? 'bg-warning' : 
@@ -106,17 +112,17 @@
                             </p>
 
                             <h6>Raison du Signalement</h6>
-                            <p class="border p-3 bg-light"><?= nl2br(htmlspecialchars($report['reason'])) ?></p>
+                            <p class="border p-3 bg-light"><?= nl2br(htmlspecialchars($report['reason'], ENT_QUOTES, 'UTF-8')) ?></p>
 
                             <?php if (!empty($report['admin_note'])): ?>
                                 <h6>Note de l'Admin</h6>
-                                <p class="border p-3 bg-light"><?= nl2br(htmlspecialchars($report['admin_note'])) ?></p>
+                                <p class="border p-3 bg-light"><?= nl2br(htmlspecialchars($report['admin_note'], ENT_QUOTES, 'UTF-8')) ?></p>
                             <?php endif; ?>
 
                             <?php if ($report['status'] === 'pending'): ?>
                                 <h6>Actions</h6>
                                 <form method="post">
-                                    <input type="hidden" name="report_id" value="<?= htmlspecialchars($report['id']) ?>">
+                                    <input type="hidden" name="report_id" value="<?= htmlspecialchars($report['id'], ENT_QUOTES, 'UTF-8') ?>">
                                     <div class="mb-3">
                                         <label for="admin_note<?= $report['id'] ?>" class="form-label">Note de l'Administrateur (optionnelle):</label>
                                         <textarea id="admin_note<?= $report['id'] ?>" name="admin_note" class="form-control" rows="3" placeholder="Vos notes ou actions prises..."></textarea>
@@ -139,7 +145,7 @@
                 <ul class="pagination justify-content-center">
                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                         <li class="page-item <?= ($i === $page) ? 'active' : '' ?>">
-                            <a class="page-link" href="index.php?action=reports<?= isset($_GET['status']) ? '&status=' . htmlspecialchars($_GET['status']) : '' ?>&page=<?= $i ?>"><?= $i ?></a>
+                            <a class="page-link" href="index.php?action=reports<?= isset($_GET['status']) ? '&status=' . htmlspecialchars($_GET['status'], ENT_QUOTES, 'UTF-8') : '' ?>&page=<?= $i ?>"><?= $i ?></a>
                         </li>
                     <?php endfor; ?>
                 </ul>

@@ -32,7 +32,7 @@ class SubjectController {
                 
                 // Send private message to subject creator
                 $pmModel = new PrivateMessage();
-                $adminName = htmlspecialchars($_SESSION['user']['prenoms'] . ' ' . $_SESSION['user']['nom']);
+                $adminName = htmlspecialchars($_SESSION['user']['pseudo'] ?? 'Administrateur');
                 $subjectTitle = htmlspecialchars($subject['title']);
                 
                 $notificationMessage = "Notification: Votre sujet \"$subjectTitle\" a été supprimé par un administrateur.\n\n";

@@ -9,7 +9,7 @@
     <div class="container mt-5">
         <h2>Connexion</h2>
         <?php if (!empty($message)): ?>
-            <div class="alert alert-danger"><?= htmlspecialchars($message) ?></div>
+            <div class="alert alert-danger"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
         <?php endif; ?>
         <form method="post">
             <label for="email">Email:</label>

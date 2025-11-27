@@ -6,18 +6,26 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body class="<?= isset($_SESSION['user_preferences']) ? 'bg-' . htmlspecialchars($_SESSION['user_preferences']['background_mode'], ENT_QUOTES, 'UTF-8') : 'bg-light' ?>" <?php if (isset($_SESSION['user_preferences']) && $_SESSION['user_preferences']['background_mode'] === 'custom' && !empty($_SESSION['user_preferences']['custom_background_image'])): ?>style="background-image: url('<?= htmlspecialchars($_SESSION['user_preferences']['custom_background_image'], ENT_QUOTES, 'UTF-8') ?>'); background-size: cover; background-attachment: fixed; background-position: center;"<?php endif; ?>>
 <div class="container mt-5">
     <?php include __DIR__ . '/_nav.php'; ?>
 
     <!-- Flash Messages -->
     <?php if (isset($_SESSION['flash_message'])): ?>
-        <div class="alert alert-<?= htmlspecialchars($_SESSION['flash_type']) ?> alert-dismissible fade show" role="alert">
-            <?= htmlspecialchars($_SESSION['flash_message']) ?>
+        <div class="alert alert-<?= htmlspecialchars($_SESSION['flash_type'], ENT_QUOTES, 'UTF-8') ?> alert-dismissible fade show" role="alert">
+            <?= htmlspecialchars($_SESSION['flash_message'], ENT_QUOTES, 'UTF-8') ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <?php unset($_SESSION['flash_message'], $_SESSION['flash_type']); ?>
     <?php endif; ?>
+
+    <!-- Navigation Buttons -->
+    <div class="mb-4">
+        <a href="index.php" class="btn btn-secondary">🏠 Retour à l'Accueil</a>
+        <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
+            <a href="index.php?action=admin" class="btn btn-danger">🛡️ Admin</a>
+        <?php endif; ?>
+    </div>
 
     <!-- Create Subject Form (logged-in users only) -->
     <?php if (isset($_SESSION['user'])): ?>
@@ -59,16 +67,16 @@
                         <div class="col-md-6 col-lg-4">
                             <div class="card h-100">
                                 <?php if (!empty($subject['image'])): ?>
-                                    <img src="<?= htmlspecialchars($subject['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($subject['title']) ?>" style="height: 200px; object-fit: cover;">
+                                    <img src="<?= htmlspecialchars($subject['image'], ENT_QUOTES, 'UTF-8') ?>" class="card-img-top" alt="<?= htmlspecialchars($subject['title'], ENT_QUOTES, 'UTF-8') ?>" style="height: 200px; object-fit: cover;">
                                 <?php else: ?>
                                     <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
                                         <p class="mb-0">Pas d'image</p>
                                     </div>
                                 <?php endif; ?>
                                 <div class="card-body">
-                                    <h5 class="card-title"><?= htmlspecialchars($subject['title']) ?></h5>
+                                    <h5 class="card-title"><?= htmlspecialchars($subject['title'], ENT_QUOTES, 'UTF-8') ?></h5>
                                     <p class="card-text text-muted small">
-                                        Par <strong><?= htmlspecialchars($subject['prenoms'] . ' ' . $subject['nom']) ?></strong><br>
+                                        Par <strong><?= htmlspecialchars($subject['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></strong><br>
                                         <em><?= $subject['created_at'] ?></em>
                                     </p>
                                 </div>
@@ -107,7 +115,7 @@
                         </div>
                         <form method="post">
                             <div class="modal-body">
-                                <p>Êtes-vous sûr de vouloir supprimer le sujet <strong><?= htmlspecialchars($subject['title']) ?></strong>?</p>
+                                <p>Êtes-vous sûr de vouloir supprimer le sujet <strong><?= htmlspecialchars($subject['title'], ENT_QUOTES, 'UTF-8') ?></strong>?</p>
                                 <div class="mb-3">
                                     <label for="deletion_reason<?= $subject['id'] ?>" class="form-label">Raison de la suppression (optionnelle):</label>
                                     <textarea id="deletion_reason<?= $subject['id'] ?>" name="deletion_reason" class="form-control" rows="3" placeholder="Expliquez pourquoi ce sujet a été supprimé..."></textarea>

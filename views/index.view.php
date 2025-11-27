@@ -6,9 +6,17 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
       <link href="assets/css/style.css" rel="stylesheet">
     </head>
-    <body class="bg-light">
+    <body class="<?= isset($_SESSION['user_preferences']) ? 'bg-' . htmlspecialchars($_SESSION['user_preferences']['background_mode'], ENT_QUOTES, 'UTF-8') : 'bg-light' ?>" <?php if (isset($_SESSION['user_preferences']) && $_SESSION['user_preferences']['background_mode'] === 'custom' && !empty($_SESSION['user_preferences']['custom_background_image'])): ?>style="background-image: url('<?= htmlspecialchars($_SESSION['user_preferences']['custom_background_image'], ENT_QUOTES, 'UTF-8') ?>'); background-size: cover; background-attachment: fixed; background-position: center;"<?php endif; ?>>
   <div class="container mt-5">
     <?php include __DIR__ . '/_nav.php'; ?>
+
+    <!-- Navigation Buttons -->
+    <div class="mb-4">
+        <a href="index.php?action=subject" class="btn btn-info">📚 Catalogue de Sujets</a>
+        <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
+            <a href="index.php?action=admin" class="btn btn-danger">🛡️ Admin</a>
+        <?php endif; ?>
+    </div>
 
         <?php if (isset($_SESSION['user'])): ?>
             <!-- Formulaire pour utilisateur connecté -->
@@ -39,11 +47,11 @@
                     <ul class="list-group">
                         <?php foreach ($messages as $msg): ?>
                             <li class="list-group-item">
-                                <strong><?= htmlspecialchars($msg['nom'] . ' ' . $msg['prenoms']) ?>:</strong>
-                                <span id="msg-content-<?= $msg['id'] ?>"><?= htmlspecialchars($msg['message']) ?></span>
+                                <strong><?= htmlspecialchars($msg['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?>:</strong>
+                                <span id="msg-content-<?= $msg['id'] ?>"><?= htmlspecialchars($msg['message'], ENT_QUOTES, 'UTF-8') ?></span>
                                 <?php if (!empty($msg['image'])): ?>
                                   <br>
-                                  <img src="<?= htmlspecialchars($msg['image']) ?>" alt="Image" class="pm-image">
+                                  <img src="<?= htmlspecialchars($msg['image'], ENT_QUOTES, 'UTF-8') ?>" alt="Image" class="pm-image">
                                 <?php endif; ?>
                                 <span class="text-muted float-end"><em><?= $msg['created_at'] ?></em></span>
                                 <?php if (isset($_SESSION['user']) && ($_SESSION['user']['id'] == $msg['user_id'] || $_SESSION['user']['role'] == 'admin')): ?>
@@ -65,7 +73,7 @@
                                             <div class="modal-body">
                                               <input type="hidden" name="message_id" value="<?= $msg['id'] ?>">
                                               <label for="edit-message-<?= $msg['id'] ?>" class="form-label">Message :</label>
-                                              <textarea name="message" id="edit-message-<?= $msg['id'] ?>" class="form-control" rows="3" required><?= htmlspecialchars($msg['message']) ?></textarea>
+                                              <textarea name="message" id="edit-message-<?= $msg['id'] ?>" class="form-control" rows="3" required><?= htmlspecialchars($msg['message'], ENT_QUOTES, 'UTF-8') ?></textarea>
                                               <label for="edit-image-<?= $msg['id'] ?>" class="form-label mt-2">Image (optionnelle) :</label>
                                               <input type="file" name="image" id="edit-image-<?= $msg['id'] ?>" class="form-control">
                                             </div>
@@ -103,12 +111,16 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    <?php if (isset($_GET['showLogin'])): ?>
-      document.addEventListener('DOMContentLoaded', function(){
+    document.addEventListener('DOMContentLoaded', function(){
+      <?php if (isset($_GET['showLogin'])): ?>
         var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
         loginModal.show();
-      });
-    <?php endif; ?>
+      <?php endif; ?>
+      <?php if (isset($_GET['showRegister'])): ?>
+        var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+        registerModal.show();
+      <?php endif; ?>
+    });
   </script>
     </body>
 </html>

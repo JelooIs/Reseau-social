@@ -1,6 +1,13 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); } 
 
+// Load user preferences if logged in
+if (isset($_SESSION['user']) && !isset($_SESSION['user_preferences'])) {
+    require_once 'models/UserPreferences.php';
+    $prefsModel = new UserPreferences();
+    $_SESSION['user_preferences'] = $prefsModel->getPreferences($_SESSION['user']['id']);
+}
+
 require_once 'controllers/HomeController.php';
 require_once 'controllers/RegisterController.php';
 require_once 'controllers/LoginController.php';
@@ -10,6 +17,7 @@ require_once 'controllers/PrivateMessageController.php';
 require_once 'controllers/SubjectController.php';
 require_once 'controllers/ReportController.php';
 require_once 'controllers/AdminReportController.php';
+require_once 'controllers/SettingsController.php';
 
 if (isset($_GET['action']) && $_GET['action'] === 'register') {
     $controller = new RegisterController();
@@ -53,6 +61,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'report') {
 if (isset($_GET['action']) && $_GET['action'] === 'reports') {
     $controller = new AdminReportController();
     $controller->reports();
+    exit();
+}
+if (isset($_GET['action']) && $_GET['action'] === 'settings') {
+    $controller = new SettingsController();
+    $controller->settings();
     exit();
 }
 else {

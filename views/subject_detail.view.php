@@ -1,37 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><?= htmlspecialchars($subject['title']) ?> - Réseau Social</title>
+    <title><?= htmlspecialchars($subject['title'], ENT_QUOTES, 'UTF-8') ?> - Réseau Social</title>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body class="<?= isset($_SESSION['user_preferences']) ? 'bg-' . htmlspecialchars($_SESSION['user_preferences']['background_mode'], ENT_QUOTES, 'UTF-8') : 'bg-light' ?>" <?php if (isset($_SESSION['user_preferences']) && $_SESSION['user_preferences']['background_mode'] === 'custom' && !empty($_SESSION['user_preferences']['custom_background_image'])): ?>style="background-image: url('<?= htmlspecialchars($_SESSION['user_preferences']['custom_background_image'], ENT_QUOTES, 'UTF-8') ?>'); background-size: cover; background-attachment: fixed; background-position: center;"<?php endif; ?>>
 <div class="container mt-5">
     <?php include __DIR__ . '/_nav.php'; ?>
 
     <!-- Flash Messages -->
     <?php if (isset($_SESSION['flash_message'])): ?>
-        <div class="alert alert-<?= htmlspecialchars($_SESSION['flash_type']) ?> alert-dismissible fade show" role="alert">
-            <?= htmlspecialchars($_SESSION['flash_message']) ?>
+        <div class="alert alert-<?= htmlspecialchars($_SESSION['flash_type'], ENT_QUOTES, 'UTF-8') ?> alert-dismissible fade show" role="alert">
+            <?= htmlspecialchars($_SESSION['flash_message'], ENT_QUOTES, 'UTF-8') ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <?php unset($_SESSION['flash_message'], $_SESSION['flash_type']); ?>
     <?php endif; ?>
 
+    <!-- Navigation Buttons -->
+    <div class="mb-4">
+        <a href="index.php" class="btn btn-secondary">🏠 Retour à l'Accueil</a>
+        <a href="index.php?action=subject" class="btn btn-info">📚 Retour au Catalogue</a>
+        <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
+            <a href="index.php?action=admin" class="btn btn-danger">🛡️ Admin</a>
+        <?php endif; ?>
+    </div>
+
     <!-- Subject Header -->
     <div class="card mb-4">
         <div class="card-body">
             <?php if (!empty($subject['image'])): ?>
-                <img src="<?= htmlspecialchars($subject['image']) ?>" class="img-fluid mb-3" alt="<?= htmlspecialchars($subject['title']) ?>" style="max-height: 300px; object-fit: cover;">
+                <img src="<?= htmlspecialchars($subject['image'], ENT_QUOTES, 'UTF-8') ?>" class="img-fluid mb-3" alt="<?= htmlspecialchars($subject['title'], ENT_QUOTES, 'UTF-8') ?>" style="max-height: 300px; object-fit: cover;">
             <?php endif; ?>
-            <h2><?= htmlspecialchars($subject['title']) ?></h2>
-            <p class="text-muted">
-                Créé par <strong><?= htmlspecialchars($subject['prenoms'] . ' ' . $subject['nom']) ?></strong><br>
+            <h2><?= htmlspecialchars($subject['title'], ENT_QUOTES, 'UTF-8') ?></h2>
+                <p class="text-muted">
+                Créé par <strong><?= htmlspecialchars($subject['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></strong><br>
                 <em><?= $subject['created_at'] ?></em>
             </p>
             <div>
-                <a href="index.php?action=subject" class="btn btn-secondary">Retour au Catalogue</a>
                 <?php if (isset($_SESSION['user'])): ?>
                     <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#reportSubjectModal">Signaler</button>
                 <?php endif; ?>
@@ -67,7 +75,7 @@
                         <li class="list-group-item">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <strong><?= htmlspecialchars($c['prenoms'] . ' ' . $c['nom']) ?></strong>
+                                    <strong><?= htmlspecialchars($c['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></strong>
                                     <div class="text-muted small"><?= $c['created_at'] ?></div>
                                 </div>
                                 <div class="btn-group btn-group-sm" role="group">
@@ -82,7 +90,7 @@
                                     <?php endif; ?>
                                 </div>
                             </div>
-                            <div class="mt-2"><?= nl2br(htmlspecialchars($c['message'])) ?></div>
+                            <div class="mt-2"><?= nl2br(htmlspecialchars($c['message'], ENT_QUOTES, 'UTF-8')) ?></div>
                         </li>
                     <?php endforeach; ?>
                 </ul>

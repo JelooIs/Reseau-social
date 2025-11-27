@@ -7,9 +7,17 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body class="<?= isset($_SESSION['user_preferences']) ? 'bg-' . htmlspecialchars($_SESSION['user_preferences']['background_mode'], ENT_QUOTES, 'UTF-8') : 'bg-light' ?>" <?php if (isset($_SESSION['user_preferences']) && $_SESSION['user_preferences']['background_mode'] === 'custom' && !empty($_SESSION['user_preferences']['custom_background_image'])): ?>style="background-image: url('<?= htmlspecialchars($_SESSION['user_preferences']['custom_background_image'], ENT_QUOTES, 'UTF-8') ?>'); background-size: cover; background-attachment: fixed; background-position: center;"<?php endif; ?>>
 <div class="container mt-5">
     <?php include __DIR__ . '/_nav.php'; ?>
+    
+    <!-- Navigation Buttons -->
+    <div class="mb-4">
+        <a href="index.php" class="btn btn-secondary">🏠 Retour à l'Accueil</a>
+        <a href="index.php?action=subject" class="btn btn-info">📚 Catalogue de Sujets</a>
+        <a href="index.php?action=reports" class="btn btn-warning">📋 Gestion des Signalements</a>
+    </div>
+    
     <h2 class="mb-4">Interface Admin</h2>
 
     <h4>Utilisateurs</h4>
@@ -17,8 +25,7 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nom</th>
-                <th>Prénoms</th>
+                <th>Pseudo</th>
                 <th>Email</th>
                 <th>Rôle</th>
             </tr>
@@ -27,10 +34,9 @@
             <?php foreach ($users as $user): ?>
             <tr>
                 <td><?= $user['id'] ?></td>
-                <td><?= htmlspecialchars($user['nom']) ?></td>
-                <td><?= htmlspecialchars($user['prenoms']) ?></td>
-                <td><?= htmlspecialchars($user['email']) ?></td>
-                <td><?= htmlspecialchars($user['role']) ?></td>
+                <td><?= htmlspecialchars($user['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
+                <td><?= htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td><?= htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8') ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
@@ -52,19 +58,18 @@
             <?php foreach ($messages as $msg): ?>
             <tr>
                 <td><?= $msg['id'] ?></td>
-                <td><?= htmlspecialchars($msg['nom'] . ' ' . $msg['prenoms']) ?></td>
-                <td><?= htmlspecialchars($msg['message']) ?></td>
+                <td><?= htmlspecialchars($msg['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
+                <td><?= htmlspecialchars($msg['message'], ENT_QUOTES, 'UTF-8') ?></td>
                 <td>
                     <?php if (!empty($msg['image'])): ?>
-                        <img src="<?= htmlspecialchars($msg['image']) ?>" class="pm-image-small">
+                        <img src="<?= htmlspecialchars($msg['image'], ENT_QUOTES, 'UTF-8') ?>" class="pm-image-small">
                     <?php endif; ?>
-                </td>
-                <td><?= $msg['created_at'] ?></td>
-                <td>
-                    <form method="post" action="index.php?action=admin" class="inline-form">
-                        <input type="hidden" name="message_id" value="<?= $msg['id'] ?>">
-                        <button type="submit" name="delete" class="btn btn-danger btn-sm">Supprimer</button>
-                    </form>
+                <tr>
+                    <td><?= $user['id'] ?></td>
+                    <td><?= htmlspecialchars($user['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
+                    <td><?= htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8') ?></td>
+                    <td><?= htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8') ?></td>
+                </tr>
                 </td>
             </tr>
             <?php endforeach; ?>

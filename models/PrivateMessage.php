@@ -27,12 +27,12 @@ class PrivateMessage {
 
     // get list of threads (distinct partners) and last message for a user
     public function threadsForUser($user_id) {
-        $sql = "SELECT u.id as partner_id, u.nom, u.prenoms, MAX(pm.created_at) as last_date, MAX(pm.id) as last_msg_id
-                FROM private_messages pm
-                JOIN users u ON u.id = (CASE WHEN pm.sender_id = :uid THEN pm.receiver_id ELSE pm.sender_id END)
-                WHERE pm.sender_id = :uid OR pm.receiver_id = :uid
-                GROUP BY partner_id, u.nom, u.prenoms
-                ORDER BY last_date DESC";
+        $sql = "SELECT u.id as partner_id, u.pseudo, MAX(pm.created_at) as last_date, MAX(pm.id) as last_msg_id
+            FROM private_messages pm
+            JOIN users u ON u.id = (CASE WHEN pm.sender_id = :uid THEN pm.receiver_id ELSE pm.sender_id END)
+            WHERE pm.sender_id = :uid OR pm.receiver_id = :uid
+            GROUP BY partner_id, u.pseudo
+            ORDER BY last_date DESC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':uid' => $user_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -40,8 +40,8 @@ class PrivateMessage {
 
     // Get messages between two users (with pagination)
     public function messagesBetween($userA, $userB, $limit = 50, $offset = 0) {
-        $sql = "SELECT pm.*, us.nom AS sender_nom, us.prenoms AS sender_prenoms
-                FROM private_messages pm
+        $sql = "SELECT pm.*, us.pseudo AS sender_pseudo
+            FROM private_messages pm
                 JOIN users us ON us.id = pm.sender_id
                 WHERE (sender_id = :a AND receiver_id = :b) OR (sender_id = :b AND receiver_id = :a)
                 ORDER BY pm.created_at DESC LIMIT :limit OFFSET :offset";

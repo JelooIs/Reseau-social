@@ -15,16 +15,15 @@ Class User {
         $this->db = $database->pdo;
     }
 
-    public function create($nom, $prenoms, $email, $password, $role = 'user'){
+    public function create($email, $password, $pseudo, $role = 'user'){
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-        // include role column (default 'user')
-        $sql = "INSERT INTO users (nom, prenoms, email, password, role) VALUES (:nom, :prenoms, :email, :password, :role)";
+        // Insert user with pseudo (no nom/prenoms)
+        $sql = "INSERT INTO users (email, password, pseudo, role) VALUES (:email, :password, :pseudo, :role)";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
-            ':nom' => $nom,
-            ':prenoms' => $prenoms,
             ':email' => $email,
             ':password' => $hashedPassword,
+            ':pseudo' => $pseudo,
             ':role' => $role
         ]);
     }
