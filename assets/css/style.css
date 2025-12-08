@@ -1,7 +1,81 @@
+/* CSS Custom Properties for Dynamic Theming */
+:root {
+  --primary-color: #0d6efd;
+  --secondary-color: #6c757d;
+  --accent-color: #198754;
+}
+
 /* Central project styles */
 body {
   background-color: #f8f9fa; /* match bg-light */
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Apply custom properties to components */
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  filter: brightness(1.1);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+  filter: brightness(1.1);
+}
+
+.btn-success {
+  background-color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
+}
+
+.btn-success:hover {
+  background-color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
+  filter: brightness(1.1);
+}
+
+a {
+  color: var(--primary-color);
+}
+
+a:hover {
+  color: var(--primary-color);
+  filter: brightness(1.1);
+}
+
+.badge-primary {
+  background-color: var(--primary-color) !important;
+}
+
+.badge-secondary {
+  background-color: var(--secondary-color) !important;
+}
+
+.badge-success {
+  background-color: var(--accent-color) !important;
+}
+
+.alert-success {
+  background-color: rgba(25, 135, 84, 0.1) !important;
+  border-color: var(--accent-color) !important;
+  color: #0c3818 !important;
+}
+
+.alert-primary {
+  background-color: rgba(13, 110, 253, 0.1) !important;
+  border-color: var(--primary-color) !important;
+  color: #084298 !important;
 }
 
 /* Light theme (default) */

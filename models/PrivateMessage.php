@@ -72,4 +72,14 @@ class PrivateMessage {
             ':user_id' => $user_id
         ]);
     }
+
+    // Get a private message by ID
+    public function findById($id) {
+        $sql = "SELECT pm.*, us.pseudo AS sender_pseudo FROM private_messages pm
+            JOIN users us ON us.id = pm.sender_id
+            WHERE pm.id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

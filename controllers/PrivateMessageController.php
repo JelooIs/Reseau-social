@@ -56,6 +56,9 @@ class PrivateMessageController {
 
         $threads = $repo->threadsForUser($_SESSION['user']['id']);
 
+        // Handle new message request
+        $new_message_mode = isset($_GET['new']) && $_GET['new'] == 1;
+
         // open specific thread
         $with = isset($_GET['with']) ? intval($_GET['with']) : null;
         $messages = [];
@@ -63,6 +66,23 @@ class PrivateMessageController {
         if ($with) {
             $messages = $repo->messagesBetween($_SESSION['user']['id'], $with, 100, 0);
             $partner = $userModel->findById($with);
+        }
+
+        // Search users for new message
+        $search_results = [];
+        $search_query = '';
+        if (isset($_GET['search_user'])) {
+            $search_query = trim($_GET['search_user']);
+            if (strlen($search_query) >= 2) {
+                $search_results = $userModel->searchByPseudo($search_query, $_SESSION['user']['id']);
+            }
+            
+            // Return JSON if requested
+            if (isset($_GET['json']) && $_GET['json'] == '1') {
+                header('Content-Type: application/json');
+                echo json_encode($search_results);
+                exit();
+            }
         }
 
         require 'views/pm_inbox.view.php';

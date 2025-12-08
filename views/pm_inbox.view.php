@@ -6,6 +6,9 @@
     <title>Messages Privés</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
+    <?php if (!empty($_SESSION['color_styles'])): ?>
+        <style><?= $_SESSION['color_styles'] ?></style>
+    <?php endif; ?>
  </head>
 <body class="<?= isset($_SESSION['user_preferences']) ? 'bg-' . htmlspecialchars($_SESSION['user_preferences']['background_mode'], ENT_QUOTES, 'UTF-8') : 'bg-light' ?>" <?php if (isset($_SESSION['user_preferences']) && $_SESSION['user_preferences']['background_mode'] === 'custom' && !empty($_SESSION['user_preferences']['custom_background_image'])): ?>style="background-image: url('<?= htmlspecialchars($_SESSION['user_preferences']['custom_background_image'], ENT_QUOTES, 'UTF-8') ?>'); background-size: cover; background-attachment: fixed; background-position: center;"<?php endif; ?>>
 <div class="container mt-5">
@@ -50,7 +53,8 @@
                                                                 <strong><?= htmlspecialchars($m['sender_pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></strong>
                                                                 <div id="pm-msg-content-<?= $m['id'] ?>"><?= nl2br(htmlspecialchars($m['message'], ENT_QUOTES, 'UTF-8')) ?></div>
                                                                 <small class="text-muted"><?= $m['created_at'] ?></small>
-                                                                <?php if (isset($_SESSION['user']) && ($_SESSION['user']['id'] == $m['sender_id'] || $_SESSION['user']['role'] == 'admin')): ?>
+                                                                <div class="mt-1">
+                                                                    <?php if (isset($_SESSION['user']) && ($_SESSION['user']['id'] == $m['sender_id'] || $_SESSION['user']['role'] == 'admin')): ?>
                                                                         <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editPmModal<?= $m['id'] ?>">Modifier</button>
                                                                         <!-- Edit Modal -->
                                                                         <div class="modal fade" id="editPmModal<?= $m['id'] ?>" tabindex="-1" aria-labelledby="editPmModalLabel<?= $m['id'] ?>" aria-hidden="true">
@@ -74,7 +78,36 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                <?php endif; ?>
+                                                                    <?php endif; ?>
+                                                                    <?php if (isset($_SESSION['user'])): ?>
+                                                                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#reportPmModal<?= $m['id'] ?>">🚩 Signaler</button>
+                                                                        <!-- Report Modal -->
+                                                                        <div class="modal fade" id="reportPmModal<?= $m['id'] ?>" tabindex="-1" aria-labelledby="reportPmModalLabel<?= $m['id'] ?>" aria-hidden="true">
+                                                                            <div class="modal-dialog">
+                                                                                <div class="modal-content">
+                                                                                    <form method="post" action="index.php?action=report">
+                                                                                        <div class="modal-header">
+                                                                                            <h5 class="modal-title" id="reportPmModalLabel<?= $m['id'] ?>">Signaler ce message privé</h5>
+                                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                                        </div>
+                                                                                        <div class="modal-body">
+                                                                                            <p>Pourquoi signalez-vous ce message?</p>
+                                                                                            <div class="mb-3">
+                                                                                                <textarea name="report_reason" class="form-control" rows="4" placeholder="Décrivez le problème (minimum 10 caractères)" required></textarea>
+                                                                                            </div>
+                                                                                            <input type="hidden" name="report_type" value="message">
+                                                                                            <input type="hidden" name="report_target_id" value="<?= intval($m['id']) ?>">
+                                                                                        </div>
+                                                                                        <div class="modal-footer">
+                                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                                                            <button type="submit" class="btn btn-danger">Signaler</button>
+                                                                                        </div>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    <?php endif; ?>
+                                                                </div>
                                                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -108,12 +141,136 @@
                 <div class="alert alert-info">Sélectionnez une conversation à gauche ou commencez-en une nouvelle via son profil.</div>
             <?php endif; ?>
     <div class="mt-4">
-        <a href="index.php?action=pm&new=1" class="btn btn-success">Nouveau message</a>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newMessageModal">✉️ Nouveau message</button>
     </div>
         </div>
     </div>
 </div>
+
+<!-- New Message Modal -->
+<div class="modal fade" id="newMessageModal" tabindex="-1" aria-labelledby="newMessageLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newMessageLabel">✉️ Nouveau Message Privé</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Cherchez un utilisateur pour lui envoyer un message privé</p>
+                <div class="mb-3">
+                    <label for="search_user_input" class="form-label">Rechercher un utilisateur</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="search_user_input" placeholder="Entrez un pseudo ou un email..." autocomplete="off">
+                        <button class="btn btn-primary" type="button" id="search_user_btn">🔍 Chercher</button>
+                    </div>
+                    <small class="text-muted d-block mt-1">Minimum 2 caractères requis</small>
+                </div>
+                <div id="search_results" class="border rounded p-2" style="max-height: 350px; overflow-y: auto; display: none;">
+                    <ul class="list-group list-group-flush" id="results_list"></ul>
+                </div>
+                <div id="no_results" class="alert alert-warning mt-2 mb-0" style="display: none;">
+                    <strong>Aucun utilisateur trouvé</strong> - Vérifiez l'orthographe du pseudo
+                </div>
+                <div id="loading_spinner" class="text-center mt-3" style="display: none;">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Recherche en cours...</span>
+                    </div>
+                    <small class="text-muted d-block mt-1">Recherche en cours...</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php include __DIR__ . '/_auth_modals.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Search users via AJAX
+    document.getElementById('search_user_btn')?.addEventListener('click', function() {
+        const query = document.getElementById('search_user_input').value.trim();
+        
+        if (query.length < 2) {
+            alert('Veuillez entrer au moins 2 caractères');
+            return;
+        }
+        
+        // Show loading spinner
+        document.getElementById('loading_spinner').style.display = 'block';
+        document.getElementById('search_results').style.display = 'none';
+        document.getElementById('no_results').style.display = 'none';
+        
+        // AJAX request to search users
+        fetch('index.php?action=pm&search_user=' + encodeURIComponent(query) + '&json=1')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading_spinner').style.display = 'none';
+                
+                const resultsList = document.getElementById('results_list');
+                const noResults = document.getElementById('no_results');
+                const searchResults = document.getElementById('search_results');
+                
+                resultsList.innerHTML = '';
+                
+                if (data.length === 0) {
+                    searchResults.style.display = 'none';
+                    noResults.style.display = 'block';
+                } else {
+                    noResults.style.display = 'none';
+                    searchResults.style.display = 'block';
+                    
+                    data.forEach(user => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item list-group-item-action';
+                        li.style.cursor = 'pointer';
+                        li.style.padding = '12px';
+                        li.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">
+                                        <strong>${escapeHtml(user.pseudo)}</strong>
+                                    </h6>
+                                    <small class="text-muted">${escapeHtml(user.email)}</small>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary">Envoyer un message</button>
+                            </div>
+                        `;
+                        li.addEventListener('click', function() {
+                            window.location.href = 'index.php?action=pm&with=' + user.id;
+                        });
+                        resultsList.appendChild(li);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                document.getElementById('loading_spinner').style.display = 'none';
+                document.getElementById('no_results').style.display = 'block';
+                document.getElementById('no_results').textContent = 'Erreur lors de la recherche';
+            });
+    });
+    
+    // Allow Enter key to search
+    document.getElementById('search_user_input')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            document.getElementById('search_user_btn').click();
+        }
+    });
+    
+    // Clear search results when input is cleared
+    document.getElementById('search_user_input')?.addEventListener('input', function() {
+        if (this.value.trim().length === 0) {
+            document.getElementById('search_results').style.display = 'none';
+            document.getElementById('no_results').style.display = 'none';
+            document.getElementById('loading_spinner').style.display = 'none';
+        }
+    });
+    
+    // Helper function to escape HTML
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+</script>
 </body>
 </html>

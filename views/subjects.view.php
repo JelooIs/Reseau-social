@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Catalogue de Sujets - Réseau Social</title>
+    <title>Sujets - Réseau Social</title>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
+    <?php if (!empty($_SESSION['color_styles'])): ?>
+        <style><?= $_SESSION['color_styles'] ?></style>
+    <?php endif; ?>
 </head>
 <body class="<?= isset($_SESSION['user_preferences']) ? 'bg-' . htmlspecialchars($_SESSION['user_preferences']['background_mode'], ENT_QUOTES, 'UTF-8') : 'bg-light' ?>" <?php if (isset($_SESSION['user_preferences']) && $_SESSION['user_preferences']['background_mode'] === 'custom' && !empty($_SESSION['user_preferences']['custom_background_image'])): ?>style="background-image: url('<?= htmlspecialchars($_SESSION['user_preferences']['custom_background_image'], ENT_QUOTES, 'UTF-8') ?>'); background-size: cover; background-attachment: fixed; background-position: center;"<?php endif; ?>>
 <div class="container mt-5">
@@ -82,6 +85,9 @@
                                 </div>
                                 <div class="card-footer bg-white">
                                     <a href="index.php?action=subject&amp;id=<?= $subject['id'] ?>" class="btn btn-primary btn-sm">Voir Discussion</a>
+                                    <?php if (isset($_SESSION['user'])): ?>
+                                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#reportSubjectModal<?= $subject['id'] ?>">🚩 Signaler</button>
+                                    <?php endif; ?>
                                     <?php if (isset($_SESSION['user']) && ($_SESSION['user']['id'] == $subject['user_id'] || $_SESSION['user']['role'] == 'admin')): ?>
                                         <?php if ($_SESSION['user']['role'] == 'admin'): ?>
                                             <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteSubjectModal<?= $subject['id'] ?>">Supprimer</button>
@@ -102,6 +108,36 @@
             <?php endif; ?>
         </div>
     </div>
+
+    <!-- Report Subject Modals -->
+    <?php if (isset($_SESSION['user']) && !empty($subjects)): ?>
+        <?php foreach ($subjects as $subject): ?>
+            <div class="modal fade" id="reportSubjectModal<?= $subject['id'] ?>" tabindex="-1" aria-labelledby="reportSubjectLabel<?= $subject['id'] ?>" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="reportSubjectLabel<?= $subject['id'] ?>">Signaler ce Sujet</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post" action="index.php?action=report">
+                            <div class="modal-body">
+                                <p>Pourquoi signalez-vous ce sujet?</p>
+                                <div class="mb-3">
+                                    <textarea name="report_reason" class="form-control" rows="4" placeholder="Décrivez le problème (minimum 10 caractères)" required></textarea>
+                                </div>
+                                <input type="hidden" name="report_type" value="subject">
+                                <input type="hidden" name="report_target_id" value="<?= intval($subject['id']) ?>">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button type="submit" class="btn btn-warning">Signaler</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
 
     <!-- Delete Subject Modals (for admins) -->
     <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] == 'admin' && !empty($subjects)): ?>

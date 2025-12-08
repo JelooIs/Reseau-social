@@ -6,6 +6,9 @@
     <title>Paramètres - Réseau Social</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
+    <?php if (!empty($_SESSION['color_styles'])): ?>
+        <style><?= $_SESSION['color_styles'] ?></style>
+    <?php endif; ?>
 </head>
 <body class="<?= isset($_SESSION['user_preferences']) ? 'bg-' . htmlspecialchars($_SESSION['user_preferences']['background_mode'], ENT_QUOTES, 'UTF-8') : 'bg-light' ?>" <?php if (isset($_SESSION['user_preferences']) && $_SESSION['user_preferences']['background_mode'] === 'custom' && !empty($_SESSION['user_preferences']['custom_background_image'])): ?>style="background-image: url('<?= htmlspecialchars($_SESSION['user_preferences']['custom_background_image'], ENT_QUOTES, 'UTF-8') ?>'); background-size: cover; background-attachment: fixed; background-position: center;"<?php endif; ?>>
 <div class="container mt-5">
@@ -90,6 +93,69 @@
                     <button type="submit" name="delete_custom_bg" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce fond d\'écran?')">🗑️ Supprimer</button>
                 </form>
             <?php endif; ?>
+
+            <hr>
+
+            <!-- Color Customization Section -->
+            <h5 class="mb-4">Palettes de Couleurs</h5>
+            <form method="post" class="mb-5">
+                <div class="row mb-4">
+                    <?php if (isset($colorPresets)): ?>
+                        <?php foreach ($colorPresets as $presetName => $colors): ?>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="card border <?= isset($preferences) && $preferences['primary_color'] === $colors['primary'] && $preferences['secondary_color'] === $colors['secondary'] && $preferences['accent_color'] === $colors['accent'] ? 'border-primary' : 'border-secondary' ?>" style="cursor: pointer;" onclick="document.getElementById('preset_<?= htmlspecialchars($presetName, ENT_QUOTES, 'UTF-8') ?>').click()">
+                                    <div class="card-body text-center p-3">
+                                        <h6 class="card-title mb-3">
+                                            <input type="radio" name="color_preset" value="<?= htmlspecialchars($presetName, ENT_QUOTES, 'UTF-8') ?>" id="preset_<?= htmlspecialchars($presetName, ENT_QUOTES, 'UTF-8') ?>" class="d-none" <?= isset($preferences) && $preferences['primary_color'] === $colors['primary'] && $preferences['secondary_color'] === $colors['secondary'] && $preferences['accent_color'] === $colors['accent'] ? 'checked' : '' ?>>
+                                            <?= ucfirst(htmlspecialchars($presetName, ENT_QUOTES, 'UTF-8')) ?>
+                                        </h6>
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <div style="width: 50px; height: 50px; background-color: <?= htmlspecialchars($colors['primary'], ENT_QUOTES, 'UTF-8') ?>; border-radius: 4px; border: 1px solid #ddd;" title="Primaire"></div>
+                                            <div style="width: 50px; height: 50px; background-color: <?= htmlspecialchars($colors['secondary'], ENT_QUOTES, 'UTF-8') ?>; border-radius: 4px; border: 1px solid #ddd;" title="Secondaire"></div>
+                                            <div style="width: 50px; height: 50px; background-color: <?= htmlspecialchars($colors['accent'], ENT_QUOTES, 'UTF-8') ?>; border-radius: 4px; border: 1px solid #ddd;" title="Accent"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+                <button type="submit" name="apply_color_preset" class="btn btn-primary">Appliquer la palette</button>
+            </form>
+
+            <hr>
+
+            <!-- Custom Colors Section -->
+            <h5 class="mb-4">Couleurs Personnalisées</h5>
+            <form method="post" class="mb-5">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="primary_color" class="form-label">Couleur Primaire</label>
+                        <div class="input-group">
+                            <input type="color" name="primary_color" id="primary_color" class="form-control form-control-color" value="<?= isset($preferences) && !empty($preferences['primary_color']) ? htmlspecialchars($preferences['primary_color'], ENT_QUOTES, 'UTF-8') : '#0d6efd' ?>" style="max-width: 80px;">
+                            <input type="text" class="form-control" id="primary_color_hex" placeholder="#0d6efd" value="<?= isset($preferences) && !empty($preferences['primary_color']) ? htmlspecialchars($preferences['primary_color'], ENT_QUOTES, 'UTF-8') : '#0d6efd' ?>" readonly>
+                        </div>
+                        <small class="text-muted">Utilisée pour les boutons et les liens</small>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="secondary_color" class="form-label">Couleur Secondaire</label>
+                        <div class="input-group">
+                            <input type="color" name="secondary_color" id="secondary_color" class="form-control form-control-color" value="<?= isset($preferences) && !empty($preferences['secondary_color']) ? htmlspecialchars($preferences['secondary_color'], ENT_QUOTES, 'UTF-8') : '#6c757d' ?>" style="max-width: 80px;">
+                            <input type="text" class="form-control" id="secondary_color_hex" placeholder="#6c757d" value="<?= isset($preferences) && !empty($preferences['secondary_color']) ? htmlspecialchars($preferences['secondary_color'], ENT_QUOTES, 'UTF-8') : '#6c757d' ?>" readonly>
+                        </div>
+                        <small class="text-muted">Utilisée pour les éléments secondaires</small>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="accent_color" class="form-label">Couleur d'Accent</label>
+                        <div class="input-group">
+                            <input type="color" name="accent_color" id="accent_color" class="form-control form-control-color" value="<?= isset($preferences) && !empty($preferences['accent_color']) ? htmlspecialchars($preferences['accent_color'], ENT_QUOTES, 'UTF-8') : '#198754' ?>" style="max-width: 80px;">
+                            <input type="text" class="form-control" id="accent_color_hex" placeholder="#198754" value="<?= isset($preferences) && !empty($preferences['accent_color']) ? htmlspecialchars($preferences['accent_color'], ENT_QUOTES, 'UTF-8') : '#198754' ?>" readonly>
+                        </div>
+                        <small class="text-muted">Utilisée pour les éléments d'accent</small>
+                    </div>
+                </div>
+                <button type="submit" name="save_custom_colors" class="btn btn-success">💾 Enregistrer les couleurs personnalisées</button>
+            </form>
         </div>
     </div>
 </div>
@@ -98,5 +164,17 @@
 <?php include __DIR__ . '/_logout_modal.php'; ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Sync color pickers with hex display
+    document.getElementById('primary_color')?.addEventListener('input', function() {
+        document.getElementById('primary_color_hex').value = this.value;
+    });
+    document.getElementById('secondary_color')?.addEventListener('input', function() {
+        document.getElementById('secondary_color_hex').value = this.value;
+    });
+    document.getElementById('accent_color')?.addEventListener('input', function() {
+        document.getElementById('accent_color_hex').value = this.value;
+    });
+</script>
 </body>
 </html>

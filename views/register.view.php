@@ -3,6 +3,11 @@
 <head>
     <title>Inscription</title>
     <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <?php if (!empty($_SESSION['color_styles'])): ?>
+        <style><?= $_SESSION['color_styles'] ?></style>
+    <?php endif; ?>
 </head>
 <body>
     <h2>Inscription</h2>

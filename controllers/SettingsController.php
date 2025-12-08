@@ -88,7 +88,51 @@ class SettingsController {
             exit();
         }
 
+        // Handle color scheme preset selection
+        if (isset($_POST['apply_color_preset']) && isset($_POST['color_preset'])) {
+            $colorPresets = $prefsModel->getColorPresets();
+            $preset = $_POST['color_preset'];
+            
+            if (isset($colorPresets[$preset])) {
+                $colors = $colorPresets[$preset];
+                $prefsModel->setColorPreferences(
+                    $user_id,
+                    $colors['primary'],
+                    $colors['secondary'],
+                    $colors['accent']
+                );
+                $_SESSION['user_preferences'] = $prefsModel->getPreferences($user_id);
+                $_SESSION['flash_message'] = 'Palette de couleurs appliquée avec succès!';
+                $_SESSION['flash_type'] = 'success';
+                header('Location: index.php?action=settings');
+                exit();
+            }
+        }
+
+        // Handle custom color selection
+        if (isset($_POST['save_custom_colors'])) {
+            $primary = $_POST['primary_color'] ?? '#0d6efd';
+            $secondary = $_POST['secondary_color'] ?? '#6c757d';
+            $accent = $_POST['accent_color'] ?? '#198754';
+            
+            // Validate hex colors
+            if (preg_match('/^#[0-9A-F]{6}$/i', $primary) && 
+                preg_match('/^#[0-9A-F]{6}$/i', $secondary) && 
+                preg_match('/^#[0-9A-F]{6}$/i', $accent)) {
+                
+                $prefsModel->setColorPreferences($user_id, $primary, $secondary, $accent);
+                $_SESSION['user_preferences'] = $prefsModel->getPreferences($user_id);
+                $_SESSION['flash_message'] = 'Couleurs personnalisées enregistrées avec succès!';
+                $_SESSION['flash_type'] = 'success';
+            } else {
+                $_SESSION['flash_message'] = 'Couleurs invalides. Veuillez utiliser le format hexadécimal (#RRGGBB).';
+                $_SESSION['flash_type'] = 'danger';
+            }
+            header('Location: index.php?action=settings');
+            exit();
+        }
+
+        $colorPresets = $prefsModel->getColorPresets();
         require 'views/settings.view.php';
     }
 }
-?>

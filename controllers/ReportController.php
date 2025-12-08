@@ -2,6 +2,7 @@
 require_once 'models/Report.php';
 require_once 'models/Subject.php';
 require_once 'models/Comment.php';
+require_once 'models/PrivateMessage.php';
 
 class ReportController {
     public function create() {
@@ -25,7 +26,7 @@ class ReportController {
         $reason = htmlspecialchars(trim($_POST['report_reason']));
 
         // Validate type
-        if (!in_array($type, ['subject', 'comment'])) {
+        if (!in_array($type, ['subject', 'comment', 'message'])) {
             $_SESSION['flash_message'] = 'Type de rapport invalide.';
             $_SESSION['flash_type'] = 'danger';
             header('Location: ' . $_SERVER['HTTP_REFERER']);
@@ -47,6 +48,15 @@ class ReportController {
             $target = $commentModel->findById($targetId);
             if (!$target) {
                 $_SESSION['flash_message'] = 'Le commentaire n\'existe pas.';
+                $_SESSION['flash_type'] = 'danger';
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+                exit();
+            }
+        } elseif ($type === 'message') {
+            $pmModel = new PrivateMessage();
+            $target = $pmModel->findById($targetId);
+            if (!$target) {
+                $_SESSION['flash_message'] = 'Le message privé n\'existe pas.';
                 $_SESSION['flash_type'] = 'danger';
                 header('Location: ' . $_SERVER['HTTP_REFERER']);
                 exit();

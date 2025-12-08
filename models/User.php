@@ -62,4 +62,25 @@ Class User {
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Search users by pseudo (excluding the current user)
+    public function searchByPseudo($pseudo, $exclude_user_id = null) {
+        $sql = "SELECT id, pseudo, email FROM users WHERE pseudo LIKE :pseudo";
+        
+        if ($exclude_user_id) {
+            $sql .= " AND id != :exclude_id";
+        }
+        
+        $sql .= " LIMIT 10";
+        
+        $stmt = $this->db->prepare($sql);
+        $params = [':pseudo' => '%' . $pseudo . '%'];
+        
+        if ($exclude_user_id) {
+            $params[':exclude_id'] = $exclude_user_id;
+        }
+        
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

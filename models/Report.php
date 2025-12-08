@@ -161,6 +161,14 @@ class Report {
             $targetStmt = $this->db->prepare($targetSql);
             $targetStmt->execute([':target_id' => $report['target_id']]);
             $report['target'] = $targetStmt->fetch(PDO::FETCH_ASSOC);
+        } elseif ($report['type'] === 'message') {
+            $targetSql = "SELECT pm.*, u2.pseudo as creator_pseudo 
+                         FROM private_messages pm
+                         JOIN users u2 ON pm.sender_id = u2.id
+                         WHERE pm.id = :target_id";
+            $targetStmt = $this->db->prepare($targetSql);
+            $targetStmt->execute([':target_id' => $report['target_id']]);
+            $report['target'] = $targetStmt->fetch(PDO::FETCH_ASSOC);
         }
         
         return $report;
