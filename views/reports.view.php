@@ -24,10 +24,9 @@
     <?php endif; ?>
 
     <!-- Navigation Buttons -->
-    <div class="mb-4">
-        <a href="index.php" class="btn btn-secondary">🏠 Retour à l'Accueil</a>
-        <a href="index.php?action=subject" class="btn btn-info">📚 Catalogue de Sujets</a>
-        <a href="index.php?action=admin" class="btn btn-danger">🛡️ Tableau de Bord Admin</a>
+    <div class="action-bar mb-4">
+        <a href="index.php?action=subject" class="btn btn-info btn-small">📚 Catalogue de Sujets</a>
+        <a href="index.php?action=admin" class="btn btn-danger btn-small">🛡️ Tableau de Bord Admin</a>
     </div>
 
     <div class="d-flex justify-content-between align-items-center mb-4">

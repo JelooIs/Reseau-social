@@ -23,10 +23,10 @@
     <?php endif; ?>
 
     <!-- Navigation Buttons -->
-    <div class="mb-4">
-        <a href="index.php" class="btn btn-secondary">🏠 Retour à l'Accueil</a>
+    <div class="action-bar mb-4">
+        <!-- Removed global 'Retour à l'Accueil' to avoid redundancy (subjects is the main catalog) -->
         <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
-            <a href="index.php?action=admin" class="btn btn-danger">🛡️ Admin</a>
+            <!-- Admin link is provided in the navbar; avoid duplicate here -->
         <?php endif; ?>
     </div>
 
@@ -83,18 +83,18 @@
                                         <em><?= $subject['created_at'] ?></em>
                                     </p>
                                 </div>
-                                <div class="card-footer bg-white">
-                                    <a href="index.php?action=subject&amp;id=<?= $subject['id'] ?>" class="btn btn-primary btn-sm">Voir Discussion</a>
+                                <div class="card-footer bg-white action-bar">
+                                    <a href="index.php?action=subject&amp;id=<?= $subject['id'] ?>" class="btn btn-primary btn-small">Voir Discussion</a>
                                     <?php if (isset($_SESSION['user'])): ?>
-                                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#reportSubjectModal<?= $subject['id'] ?>">🚩 Signaler</button>
+                                        <button class="btn btn-warning btn-small" data-bs-toggle="modal" data-bs-target="#reportSubjectModal<?= $subject['id'] ?>">🚩 Signaler</button>
                                     <?php endif; ?>
                                     <?php if (isset($_SESSION['user']) && ($_SESSION['user']['id'] == $subject['user_id'] || $_SESSION['user']['role'] == 'admin')): ?>
                                         <?php if ($_SESSION['user']['role'] == 'admin'): ?>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteSubjectModal<?= $subject['id'] ?>">Supprimer</button>
+                                            <button class="btn btn-danger btn-small" data-bs-toggle="modal" data-bs-target="#deleteSubjectModal<?= $subject['id'] ?>">Supprimer</button>
                                         <?php else: ?>
                                             <form method="post" style="display: inline;">
                                                 <input type="hidden" name="subject_id" value="<?= $subject['id'] ?>">
-                                                <button type="submit" name="delete_subject" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr?')">Supprimer</button>
+                                                <button type="submit" name="delete_subject" class="btn btn-danger btn-small" onclick="return confirm('Êtes-vous sûr?')">Supprimer</button>
                                             </form>
                                         <?php endif; ?>
                                     <?php endif; ?>

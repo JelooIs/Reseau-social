@@ -284,3 +284,22 @@ body.bg-custom .container {
 .btn-spacing {
   margin-right: .5rem;
 }
+
+/* Action bar: keep action buttons on a single line and aligned */
+.action-bar {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Place actions to the left (useful in headers) */
+.action-left {
+  margin-right: auto;
+}
+
+/* Small action button style (consistent look) */
+.btn-small {
+  padding: .35rem .6rem;
+  font-size: .875rem;
+}

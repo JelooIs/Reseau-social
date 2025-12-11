@@ -15,10 +15,9 @@
     <?php include __DIR__ . '/_nav.php'; ?>
     
     <!-- Navigation Buttons -->
-    <div class="mb-4">
-        <a href="index.php" class="btn btn-secondary">🏠 Retour à l'Accueil</a>
-        <a href="index.php?action=subject" class="btn btn-info">📚 Catalogue de Sujets</a>
-        <a href="index.php?action=reports" class="btn btn-warning">📋 Gestion des Signalements</a>
+    <div class="action-bar mb-4">
+        <a href="index.php?action=subject" class="btn btn-info btn-small">📚 Catalogue de Sujets</a>
+        <a href="index.php?action=reports" class="btn btn-warning btn-small">📋 Gestion des Signalements</a>
     </div>
     
     <h2 class="mb-4">Interface Admin</h2>

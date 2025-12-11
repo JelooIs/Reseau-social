@@ -23,17 +23,17 @@
     <?php endif; ?>
 
     <!-- Navigation Buttons -->
-    <div class="mb-4">
-        <a href="index.php" class="btn btn-secondary">🏠 Retour à l'Accueil</a>
-        <a href="index.php?action=subject" class="btn btn-info">📚 Retour au Catalogue</a>
+    <div class="action-bar mb-4">
+        <!-- Removed 'Retour à l'Accueil' (catalog is main entry). Keep return to catalog only. -->
+        <a href="index.php?action=subject" class="btn btn-info btn-small">📚 Retour au Catalogue</a>
         <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
-            <a href="index.php?action=admin" class="btn btn-danger">🛡️ Admin</a>
+            <!-- Admin link exists in navbar; avoid duplicate here -->
         <?php endif; ?>
     </div>
 
     <!-- Subject Header -->
     <div class="card mb-4">
-        <div class="card-body">
+            <div class="card-body">
             <?php if (!empty($subject['image'])): ?>
                 <img src="<?= htmlspecialchars($subject['image'], ENT_QUOTES, 'UTF-8') ?>" class="img-fluid mb-3" alt="<?= htmlspecialchars($subject['title'], ENT_QUOTES, 'UTF-8') ?>" style="max-height: 300px; object-fit: cover;">
             <?php endif; ?>
@@ -42,9 +42,9 @@
                 Créé par <strong><?= htmlspecialchars($subject['pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></strong><br>
                 <em><?= $subject['created_at'] ?></em>
             </p>
-            <div>
+            <div class="action-bar">
                 <?php if (isset($_SESSION['user'])): ?>
-                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#reportSubjectModal">Signaler</button>
+                    <button class="btn btn-warning btn-small" data-bs-toggle="modal" data-bs-target="#reportSubjectModal">Signaler</button>
                 <?php endif; ?>
             </div>
         </div>

@@ -14,11 +14,11 @@
     <?php include __DIR__ . '/_nav.php'; ?>
 
     <!-- Navigation Buttons -->
-    <div class="mb-4">
-        <a href="index.php?action=subject" class="btn btn-info">📚 Catalogue de Sujets</a>
-        <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
-            <a href="index.php?action=admin" class="btn btn-danger">🛡️ Admin</a>
-        <?php endif; ?>
+    <div class="action-bar mb-4">
+      <a href="index.php?action=subject" class="btn btn-info btn-small">📚 Catalogue de Sujets</a>
+      <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
+        <a href="index.php?action=admin" class="btn btn-danger btn-small">🛡️ Admin</a>
+      <?php endif; ?>
     </div>
 
         <?php if (isset($_SESSION['user'])): ?>

@@ -79,7 +79,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'settings') {
     exit();
 }
 else {
-    $controller = new HomeController();
+    // Default landing: subjects catalog
+    $controller = new SubjectController();
     $controller->index();
 }
 ?>

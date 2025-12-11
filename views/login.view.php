@@ -9,22 +9,37 @@
         <style><?= $_SESSION['color_styles'] ?></style>
     <?php endif; ?>
 </head>
-<body>
+<body class="<?= isset($_SESSION['user_preferences']) ? 'bg-' . htmlspecialchars($_SESSION['user_preferences']['background_mode'], ENT_QUOTES, 'UTF-8') : 'bg-light' ?>" <?php if (isset($_SESSION['user_preferences']) && $_SESSION['user_preferences']['background_mode'] === 'custom' && !empty($_SESSION['user_preferences']['custom_background_image'])): ?>style="background-image: url('<?= htmlspecialchars($_SESSION['user_preferences']['custom_background_image'], ENT_QUOTES, 'UTF-8') ?>'); background-size: cover; background-attachment: fixed; background-position: center;"<?php endif; ?>>
     <div class="container mt-5">
-        <h2>Connexion</h2>
-        <?php if (!empty($message)): ?>
-            <div class="alert alert-danger"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
-        <?php endif; ?>
-        <form method="post">
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email" class="form-control mb-2" required>
-            <label for="password">Mot de passe:</label>
-            <input type="password" name="password" id="password"
-                   class="form-control mb-2 <?php if (!empty($message)) echo 'is-invalid'; ?>"
-                   required>
-            <input type="submit" name="login" value="Se connecter" class="btn btn-primary">
-        </form>
+        <?php include __DIR__ . '/_nav.php'; ?>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="mb-3">Connexion</h2>
+                <?php if (!empty($message)): ?>
+                    <div class="alert alert-danger"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
+                <?php endif; ?>
+                <form method="post">
+                    <div class="mb-2">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" id="email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" name="password" id="password" class="form-control <?php if (!empty($message)) echo 'is-invalid'; ?>" required>
+                    </div>
+                    <div class="action-bar">
+                        <button type="submit" name="login" class="btn btn-small primary-action">Se connecter</button>
+                        <a href="index.php?action=register" class="btn btn-outline-secondary btn-small">Pas encore inscrit ?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+
+    <?php include __DIR__ . '/_auth_modals.php'; ?>
+    <?php include __DIR__ . '/_logout_modal.php'; ?>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

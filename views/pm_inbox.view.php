@@ -24,9 +24,8 @@
     <?php endif; ?>
     
     <!-- Navigation Buttons -->
-    <div class="mb-4">
-        <a href="index.php" class="btn btn-secondary">🏠 Retour à l'Accueil</a>
-        <a href="index.php?action=subject" class="btn btn-info">📚 Catalogue de Sujets</a>
+    <div class="action-bar mb-4">
+        <a href="index.php?action=subject" class="btn btn-info btn-small">📚 Catalogue de Sujets</a>
     </div>
     
     <h3>Messages privés</h3>
@@ -53,7 +52,7 @@
                                                                 <strong><?= htmlspecialchars($m['sender_pseudo'] ?? '', ENT_QUOTES, 'UTF-8') ?></strong>
                                                                 <div id="pm-msg-content-<?= $m['id'] ?>"><?= nl2br(htmlspecialchars($m['message'], ENT_QUOTES, 'UTF-8')) ?></div>
                                                                 <small class="text-muted"><?= $m['created_at'] ?></small>
-                                                                <div class="mt-1">
+                                                                    <div class="action-bar mt-1">
                                                                     <?php if (isset($_SESSION['user']) && ($_SESSION['user']['id'] == $m['sender_id'] || $_SESSION['user']['role'] == 'admin')): ?>
                                                                         <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editPmModal<?= $m['id'] ?>">Modifier</button>
                                                                         <!-- Edit Modal -->
@@ -140,8 +139,8 @@
             <?php else: ?>
                 <div class="alert alert-info">Sélectionnez une conversation à gauche ou commencez-en une nouvelle via son profil.</div>
             <?php endif; ?>
-    <div class="mt-4">
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newMessageModal">✉️ Nouveau message</button>
+    <div class="action-bar mt-4">
+        <button class="btn btn-success btn-small" data-bs-toggle="modal" data-bs-target="#newMessageModal">✉️ Nouveau message</button>
     </div>
         </div>
     </div>

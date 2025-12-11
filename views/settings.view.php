@@ -24,9 +24,8 @@
     <?php endif; ?>
 
     <!-- Navigation Buttons -->
-    <div class="mb-4">
-        <a href="index.php" class="btn btn-secondary">🏠 Retour à l'Accueil</a>
-        <a href="index.php?action=subject" class="btn btn-info">📚 Catalogue de Sujets</a>
+    <div class="action-bar mb-4">
+        <a href="index.php?action=subject" class="btn btn-info btn-small">📚 Catalogue de Sujets</a>
     </div>
 
     <div class="card">

@@ -1,7 +1,7 @@
 <?php // session is started centrally in index.php ?>
 <nav class="navbar navbar-expand-lg navbar-light bg-white mb-3">
   <div class="container-fluid">
-    <a class="navbar-brand" href="index.php">RéseauSocial</a>
+    <a class="navbar-brand" href="index.php?action=subject">RéseauSocial</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -24,12 +24,7 @@
             <a class="btn btn-outline-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Déconnexion</a>
           </li>
         <?php else: ?>
-          <li class="nav-item me-2">
-            <a class="btn btn-primary btn-sm btn-spacing" href="index.php?action=login" data-bs-toggle="modal" data-bs-target="#loginModal">Connexion</a>
-          </li>
-          <li class="nav-item">
-            <a class="btn btn-success btn-sm" href="index.php?action=register" data-bs-toggle="modal" data-bs-target="#registerModal">Inscription</a>
-          </li>
+          <!-- Visitor: do not show Connexion / Inscription here (these appear in alert/info area on some pages) -->
         <?php endif; ?>
       </ul>
     </div>
