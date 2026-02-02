@@ -22,6 +22,21 @@ class PrivateMessageController {
             $to = intval($_POST['to_user']);
             $text = trim($_POST['pm_message']);
             if ($text !== '') {
+                // Prevent students from initiating PMs to professors
+                $senderRole = isset($_SESSION['user']['role']) ? $_SESSION['user']['role'] : 'user';
+                $receiver = $userModel->findById($to);
+                $receiverRole = isset($receiver['role']) ? $receiver['role'] : 'user';
+
+                $studentRoles = ['user', 'student'];
+                $professorRoles = ['professor', 'teacher'];
+
+                if (in_array($senderRole, $studentRoles, true) && in_array($receiverRole, $professorRoles, true)) {
+                    $_SESSION['flash_message'] = "Vous n'êtes pas autorisé à initier une conversation privée avec ce professeur.";
+                    $_SESSION['flash_type'] = 'danger';
+                    header('Location: index.php?action=pm&with=' . $to);
+                    exit();
+                }
+
                 $sendUseCase->execute($_SESSION['user']['id'], $to, $text);
                 header('Location: index.php?action=pm&with=' . $to);
                 exit();

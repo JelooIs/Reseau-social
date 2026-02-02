@@ -24,6 +24,7 @@ require_once 'controllers/LoginController.php';
 require_once 'controllers/LogoutController.php';
 require_once 'controllers/AdminController.php';
 require_once 'controllers/PrivateMessageController.php';
+require_once 'controllers/AnnouncementController.php';
 require_once 'controllers/SubjectController.php';
 require_once 'controllers/ReportController.php';
 require_once 'controllers/AdminReportController.php';
@@ -52,6 +53,16 @@ if (isset($_GET['action']) && $_GET['action'] === 'admin') {
 if (isset($_GET['action']) && $_GET['action'] === 'pm') {
     $controller = new PrivateMessageController();
     $controller->inbox();
+    exit();
+}
+if (isset($_GET['action']) && $_GET['action'] === 'announcements') {
+    $controller = new AnnouncementController();
+    $controller->index();
+    exit();
+}
+if (isset($_GET['action']) && $_GET['action'] === 'announcements_create') {
+    $controller = new AnnouncementController();
+    $controller->create();
     exit();
 }
 if (isset($_GET['action']) && $_GET['action'] === 'subject') {

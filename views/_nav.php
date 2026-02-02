@@ -18,6 +18,7 @@
             <?php else: ?>
               <a class="btn btn-outline-primary btn-sm btn-spacing" href="index.php?action=pm">Messages privés</a>
             <?php endif; ?>
+            <a class="btn btn-outline-success btn-sm btn-spacing" href="index.php?action=announcements">Annonces</a>
             <a class="btn btn-outline-secondary btn-sm btn-spacing" href="index.php?action=settings">⚙️ Paramètres</a>
           </li>
           <li class="nav-item">
