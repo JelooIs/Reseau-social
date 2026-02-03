@@ -43,6 +43,34 @@
 
         <div class="card">
             <div class="card-header">
+              <h5 class="mb-0">Annonces</h5>
+            </div>
+            <div class="card-body">
+              <?php if (!empty($announcements)): ?>
+                <ul class="list-group mb-3">
+                  <?php foreach ($announcements as $a): ?>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                      <div>
+                        <strong><?= htmlspecialchars($a['title'], ENT_QUOTES, 'UTF-8') ?></strong>
+                        <div><?= nl2br(htmlspecialchars($a['body'], ENT_QUOTES, 'UTF-8')) ?></div>
+                        <small class="text-muted">Par <?= htmlspecialchars($a['creator_pseudo'], ENT_QUOTES, 'UTF-8') ?> le <?= htmlspecialchars($a['created_at'], ENT_QUOTES, 'UTF-8') ?></small>
+                      </div>
+                      <div class="ms-3 text-end">
+                        <?php if (isset($a['scope']) && $a['scope'] === 'global'): ?>
+                          <span class="badge bg-danger">Globale</span>
+                        <?php else: ?>
+                          <span class="badge bg-secondary">Ciblée</span>
+                        <?php endif; ?>
+                      </div>
+                    </li>
+                  <?php endforeach; ?>
+                </ul>
+              <?php else: ?>
+                <p class="text-muted">Aucune annonce pour le moment.</p>
+              <?php endif; ?>
+            </div>
+
+            <div class="card-header">
                 <h5 class="mb-0">Messages</h5>
             </div>
             <div class="card-body">

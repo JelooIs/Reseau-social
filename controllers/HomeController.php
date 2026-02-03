@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../src/Infrastructure/Message/MessageRepositoryAdapter.php';
 require_once __DIR__ . '/../src/UseCase/Message/CreateMessageUseCase.php';
 require_once __DIR__ . '/../src/UseCase/Message/EditMessageUseCase.php';
+require_once __DIR__ . '/../models/Announcement.php';
 
 class HomeController {
     public function index() {
@@ -45,6 +46,28 @@ class HomeController {
         $messages = $repo->all($limit, $offset);
         $totalMessages = $repo->count();
         $totalPages = ceil($totalMessages / $limit);
+
+        // Load announcements: show global, and subject-scoped visible to user when logged
+        $annModel = new Announcement();
+        if (isset($_SESSION['user'])) {
+            $announcements = $annModel->allVisibleToUser($_SESSION['user']['id']);
+        } else {
+            $announcements = $annModel->allGlobal();
+        }
+
+        // Prioritize global announcements first
+        if (!empty($announcements) && is_array($announcements)) {
+            usort($announcements, function($a, $b) {
+                $aScope = $a['scope'] ?? '';
+                $bScope = $b['scope'] ?? '';
+                if ($aScope === 'global' && $bScope !== 'global') return -1;
+                if ($bScope === 'global' && $aScope !== 'global') return 1;
+                // fallback: most recent first
+                $aTime = strtotime($a['created_at'] ?? '0');
+                $bTime = strtotime($b['created_at'] ?? '0');
+                return $bTime <=> $aTime;
+            });
+        }
 
         require 'views/index.view.php';
     }
