@@ -36,17 +36,41 @@ Class User {
     }
 
     public function findByEmail($email){
-        $sql = "SELECT * FROM users WHERE email = :email";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([':email' => $email]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        // Try to join with roles table if it exists
+        try {
+            $sql = "SELECT u.*, r.name as role_name, r.label as role_label 
+                    FROM users u 
+                    LEFT JOIN roles r ON u.role_id = r.id 
+                    WHERE u.email = :email";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':email' => $email]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // If roles table doesn't exist, query without join
+            $sql = "SELECT * FROM users WHERE email = :email";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':email' => $email]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
     }
 
     public function findById($id) {
-        $sql = "SELECT * FROM users WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        // Try to join with roles table if it exists
+        try {
+            $sql = "SELECT u.*, r.name as role_name, r.label as role_label 
+                    FROM users u 
+                    LEFT JOIN roles r ON u.role_id = r.id 
+                    WHERE u.id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // If roles table doesn't exist, query without join
+            $sql = "SELECT * FROM users WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
     }
 
     public function verify($email, $password) {
@@ -58,9 +82,44 @@ Class User {
     }
 
     public function all() {
-        $sql = "SELECT * FROM users";
-        $stmt = $this->db->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Try to join with roles table if it exists
+        try {
+            $sql = "SELECT u.*, r.name as role_name, r.label as role_label 
+                    FROM users u 
+                    LEFT JOIN roles r ON u.role_id = r.id 
+                    ORDER BY u.id";
+            $stmt = $this->db->query($sql);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // If roles table doesn't exist, query without join
+            $sql = "SELECT * FROM users ORDER BY id";
+            $stmt = $this->db->query($sql);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
+
+    /**
+     * Update user role
+     */
+    public function updateRole($userId, $roleId) {
+        $sql = "UPDATE users SET role_id = :role_id WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':role_id' => $roleId,
+            ':id' => $userId
+        ]);
+    }
+
+    /**
+     * Get user role information
+     */
+    public function getUserRole($userId) {
+        $sql = "SELECT r.* FROM roles r 
+                JOIN users u ON u.role_id = r.id 
+                WHERE u.id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id' => $userId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // Search users by pseudo (excluding the current user)
