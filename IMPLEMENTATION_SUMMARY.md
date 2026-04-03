@@ -1,207 +1,207 @@
-# Background Customization Feature - Complete Implementation
+# Fonctionnalité de Personnalisation d'Arrière-Plan - Implémentation Complète
 
-## ✅ Status: FULLY IMPLEMENTED
+## ✅ Statut : PLEINEMENT IMPLÉMENTÉ
 
-All components are in place and working. Users can now customize their site background.
+Tous les composants sont en place et fonctionnels. Les utilisateurs peuvent désormais personnaliser l'arrière-plan de leur site.
 
 ---
 
-## 📁 Files Created/Modified
+## 📁 Fichiers Créés/Modifiés
 
-### New Files Created
+### Nouveaux Fichiers Créés
 1. **`migrations/006_create_user_preferences_table.sql`**
-   - Database migration for user preferences storage
-   - Status: ✅ Executed successfully
+   - Migration de base de données pour le stockage des préférences utilisateur
+   - Statut : ✅ Exécutée avec succès
 
 2. **`models/UserPreferences.php`**
-   - ORM model for managing user preferences
-   - 5 methods for preference management
+   - Modèle ORM pour gérer les préférences utilisateur
+   - 5 méthodes pour la gestion des préférences
 
 3. **`controllers/SettingsController.php`**
-   - Handles theme selection and image uploads
-   - Image validation (type, size)
-   - Automatic cleanup of old images
+   - Gère la sélection de thème et les téléchargements d'images
+   - Validation d'image (type, taille)
+   - Nettoyage automatique des anciennes images
 
 4. **`views/settings.view.php`**
-   - User-friendly settings page
-   - Three theme cards (Light/Dark/Custom)
-   - Image upload and preview functionality
+   - Page de paramètres conviviale
+   - Trois cartes de thème (Clair/Sombre/Personnalisé)
+   - Fonctionnalité de téléchargement et d'aperçu d'image
 
 5. **`BACKGROUND_CUSTOMIZATION_FEATURE.md`**
-   - Technical implementation documentation
+   - Documentation d'implémentation technique
 
 6. **`BACKGROUND_USER_GUIDE.md`**
-   - User-friendly guide for using the feature
+   - Guide convivial pour l'utilisation de la fonctionnalité
 
-### Files Modified
+### Fichiers Modifiés
 1. **`index.php`**
-   - Added UserPreferences model loading
-   - Added SettingsController route
-   - Preferences loaded into session
+   - Ajout du chargement du modèle UserPreferences
+   - Ajout de la route SettingsController
+   - Préférences chargées dans la session
 
-2. **`assets/css/style.css`** (Expanded)
-   - Light theme styles (`.bg-light`)
-   - Dark theme styles (`.bg-dark`)
-   - Custom background styles (`.bg-custom`)
-   - Smooth transitions
+2. **`assets/css/style.css`** (Étendu)
+   - Styles de thème clair (`.bg-light`)
+   - Styles de thème sombre (`.bg-dark`)
+   - Styles d'arrière-plan personnalisé (`.bg-custom`)
+   - Transitions fluides
 
 3. **`views/_nav.php`**
-   - Added ⚙️ Settings button to navbar
-   - Link to settings page
+   - Bouton ⚙️ Paramètres ajouté à la barre de navigation
+   - Lien vers la page des paramètres
 
 4. **`views/index.view.php`**
-   - Dynamic body class binding
-   - Inline styles for custom backgrounds
+   - Liaison dynamique de classe body
+   - Styles inline pour les arrière-plans personnalisés
 
 5. **`views/subject_detail.view.php`**
-   - Dynamic body class binding
-   - Inline styles for custom backgrounds
+   - Liaison dynamique de classe body
+   - Styles inline pour les arrière-plans personnalisés
 
 6. **`views/subjects.view.php`**
-   - Dynamic body class binding
-   - Inline styles for custom backgrounds
+   - Liaison dynamique de classe body
+   - Styles inline pour les arrière-plans personnalisés
 
 7. **`views/pm_inbox.view.php`**
-   - Dynamic body class binding
-   - Inline styles for custom backgrounds
+   - Liaison dynamique de classe body
+   - Styles inline pour les arrière-plans personnalisés
 
 8. **`views/admin.view.php`**
-   - Dynamic body class binding
-   - Inline styles for custom backgrounds
+   - Liaison dynamique de classe body
+   - Styles inline pour les arrière-plans personnalisés
 
 9. **`views/reports.view.php`**
-   - Dynamic body class binding
-   - Inline styles for custom backgrounds
+   - Liaison dynamique de classe body
+   - Styles inline pour les arrière-plans personnalisés
 
 ---
 
-## 🗄️ Database Schema
+## 🗄️ Schéma de Base de Données
 
-### `user_preferences` Table
+### Table `user_preferences`
 ```
-Column                    | Type              | Description
+Colonne                  | Type              | Description
 --------------------------|-------------------|------------------------------------------
-id                        | INT (PK)          | Primary key
-user_id                   | INT (UNIQUE, FK)  | References users(id)
-background_mode           | ENUM              | 'light', 'dark', or 'custom'
-custom_background_image   | VARCHAR(255)      | Path to uploaded image
-created_at                | TIMESTAMP         | Auto-created timestamp
-updated_at                | TIMESTAMP         | Auto-updated timestamp
+id                        | INT (PK)          | Clé primaire
+user_id                   | INT (UNIQUE, FK)  | Référence users(id)
+background_mode           | ENUM              | 'light', 'dark', ou 'custom'
+custom_background_image   | VARCHAR(255)      | Chemin vers l'image téléchargée
+created_at                | TIMESTAMP         | Horodatage auto-créé
+updated_at                | TIMESTAMP         | Horodatage auto-mis à jour
 ```
 
-**Status**: ✅ Table created and verified
+**Statut** : ✅ Table créée et vérifiée
 
 ---
 
-## 🎨 Theme Features
+## 🎨 Fonctionnalités de Thème
 
-### Light Mode (☀️)
-- Background: #f8f9fa (Off-white)
-- Text: #212529 (Dark gray)
-- Cards: White background
-- Purpose: Default, bright theme
+### Mode Clair (☀️)
+- Arrière-plan : #f8f9fa (Blanc cassé)
+- Texte : #212529 (Gris foncé)
+- Cartes : Arrière-plan blanc
+- Objectif : Défaut, thème lumineux
 
-### Dark Mode (🌙)
-- Background: #1a1a1a (Almost black)
-- Text: #e0e0e0 (Light gray)
-- Cards: #2d2d2d with proper styling
-- Components: Tables, modals, forms all styled
-- Purpose: Eye comfort, low-light environments
+### Mode Sombre (🌙)
+- Arrière-plan : #1a1a1a (Presque noir)
+- Texte : #e0e0e0 (Gris clair)
+- Cartes : #2d2d2d avec style approprié
+- Composants : Tables, modales, formulaires tous stylisés
+- Objectif : Confort oculaire, environnements peu éclairés
 
-### Custom Mode (🖼️)
-- User-uploaded image as background
-- Semi-transparent overlay (50% black)
-- White cards with transparency
-- Blur effect for readability
-- Purpose: Personalization
+### Mode Personnalisé (🖼️)
+- Image téléchargée par l'utilisateur comme arrière-plan
+- Superposition semi-transparente (50% noir)
+- Cartes blanches avec transparence
+- Effet de flou pour la lisibilité
+- Objectif : Personnalisation
 
 ---
 
-## 🔄 User Flow
+## 🔄 Flux Utilisateur
 
 ```
-User clicks "⚙️ Paramètres"
+L'utilisateur clique sur "⚙️ Paramètres"
     ↓
-Redirected to settings page
+Redirigé vers la page des paramètres
     ↓
-User selects theme or uploads image
+L'utilisateur sélectionne un thème ou télécharge une image
     ↓
-Form submitted to SettingsController
+Formulaire soumis à SettingsController
     ↓
-Preferences saved to database
+Préférences sauvegardées en base de données
     ↓
-Session updated with new preferences
+Session mise à jour avec les nouvelles préférences
     ↓
-User redirected back to settings
+L'utilisateur redirigé vers les paramètres
     ↓
-All pages display new theme
+Toutes les pages affichent le nouveau thème
 ```
 
 ---
 
-## 🛡️ Security Features
+## 🛡️ Fonctionnalités de Sécurité
 
-✅ **File Upload Security**
-- Validates file type (JPG, PNG, GIF, WebP only)
-- Checks file size (max 5MB)
-- Unique filename with user_id and uniqid
-- Stored outside web root considerations
+✅ **Sécurité de Téléchargement de Fichier**
+- Valide le type de fichier (JPG, PNG, GIF, WebP uniquement)
+- Vérifie la taille du fichier (max 5MB)
+- Nom de fichier unique avec user_id et uniqid
+- Stockage en dehors de la racine web si possible
 
-✅ **Data Security**
-- HTML escaping on all output (ENT_QUOTES, UTF-8)
-- Prepared statements for database queries
-- User authentication required
-- Session-based preference loading
+✅ **Sécurité des Données**
+- Échappement HTML sur toute sortie (ENT_QUOTES, UTF-8)
+- Requêtes préparées pour les requêtes de base de données
+- Authentification utilisateur requise
+- Chargement des préférences basé sur la session
 
-✅ **Image Management**
-- Old images automatically deleted on new upload
-- Prevents storage bloat
-- File path stored securely in database
-
----
-
-## ⚡ Performance Optimizations
-
-1. **Session Caching**
-   - Preferences loaded into session on login
-   - No database query per page view
-   - Minimal overhead
-
-2. **CSS Classes**
-   - Theme applied via body class
-   - No runtime image processing
-   - Instant theme switching
-
-3. **Lazy Loading**
-   - Images lazy-loaded by browser
-   - Background-attachment: fixed for performance
+✅ **Gestion d'Images**
+- Anciennes images automatiquement supprimées lors d'un nouveau téléchargement
+- Empêche l'encombrement du stockage
+- Chemin de fichier stocké de manière sécurisée en base de données
 
 ---
 
-## 🚀 How It Works
+## ⚡ Optimisations de Performance
 
-### 1. User Authentication
+1. **Mise en Cache Session**
+   - Préférences chargées dans la session à la connexion
+   - Aucune requête de base de données par vue de page
+   - Surcharge minimale
+
+2. **Classes CSS**
+   - Thème appliqué via classe body
+   - Aucun traitement d'image à l'exécution
+   - Changement de thème instantané
+
+3. **Chargement Paresseux**
+   - Images chargées paresseusement par le navigateur
+   - Background-attachment : fixed pour les performances
+
+---
+
+## 🚀 Comment Ça Marche
+
+### 1. Authentification Utilisateur
 ```php
-// Session starts, preferences auto-loaded
+// Session démarre, préférences auto-chargées
 if (isset($_SESSION['user']) && !isset($_SESSION['user_preferences'])) {
     $_SESSION['user_preferences'] = 
         (new UserPreferences())->getPreferences($_SESSION['user']['id']);
 }
 ```
 
-### 2. Settings Page
-- User selects theme via radio buttons or uploads image
-- Form submitted to SettingsController
-- Controller saves to database and updates session
+### 2. Page des Paramètres
+- L'utilisateur sélectionne un thème via boutons radio ou télécharge une image
+- Formulaire soumis à SettingsController
+- Le contrôleur sauvegarde en base de données et met à jour la session
 
-### 3. Dynamic Styling
+### 3. Style Dynamique
 ```php
-// Applied to every page's <body> tag
+// Appliqué à chaque balise <body> de page
 class="<?= isset($_SESSION['user_preferences']) ? 
     'bg-' . htmlspecialchars(...) : 'bg-light' ?>"
 ```
 
-### 4. CSS Applies Theme
+### 4. CSS Applique le Thème
 ```css
 body.bg-dark { background-color: #1a1a1a; color: #e0e0e0; }
 body.bg-light { background-color: #f8f9fa; color: #212529; }
@@ -209,139 +209,139 @@ body.bg-light { background-color: #f8f9fa; color: #212529; }
 
 ---
 
-## 📱 Responsive Design
+## 📱 Design Responsive
 
-✅ Mobile-friendly
-- Theme cards stack vertically on small screens
-- Touch-friendly upload button
-- Readable on all screen sizes
+✅ Adapté mobile
+- Cartes de thème empilées verticalement sur petits écrans
+- Bouton de téléchargement adapté tactile
+- Lisible sur toutes les tailles d'écran
 
-✅ Cross-browser Compatible
-- Works on Chrome, Firefox, Safari, Edge
-- Graceful degradation for older browsers
-
----
-
-## 🧪 Testing Checklist
-
-- [x] Database table created
-- [x] UserPreferences model methods work
-- [x] Settings page loads correctly
-- [x] Theme selection saves to database
-- [x] Light theme applies correctly
-- [x] Dark theme applies correctly
-- [x] Custom image upload works
-- [x] Image cleanup works
-- [x] Preferences persist across pages
-- [x] Navigation button appears
-- [x] Special character escaping works
-- [x] File type validation works
-- [x] File size validation works
+✅ Compatible Cross-navigateur
+- Fonctionne sur Chrome, Firefox, Safari, Edge
+- Dégradation gracieuse pour les anciens navigateurs
 
 ---
 
-## 📝 Usage Examples
+## 🧪 Liste de Vérification de Test
 
-### As a User
-1. Click ⚙️ Paramètres in navbar
-2. Select Dark Mode card
-3. Click "Appliquer le thème"
-4. Entire site turns dark
+- [x] Table de base de données créée
+- [x] Méthodes du modèle UserPreferences fonctionnent
+- [x] Page des paramètres se charge correctement
+- [x] Sélection de thème sauvegardée en base de données
+- [x] Thème clair s'applique correctement
+- [x] Thème sombre s'applique correctement
+- [x] Téléchargement d'image personnalisée fonctionne
+- [x] Nettoyage d'image fonctionne
+- [x] Préférences persistent entre les pages
+- [x] Bouton de navigation apparaît
+- [x] Échappement de caractères spéciaux fonctionne
+- [x] Validation de type de fichier fonctionne
+- [x] Validation de taille de fichier fonctionne
 
-### As a Developer
+---
+
+## 📝 Exemples d'Utilisation
+
+### En tant qu'Utilisateur
+1. Cliquez sur ⚙️ Paramètres dans la barre de navigation
+2. Sélectionnez la carte Mode Sombre
+3. Cliquez sur "Appliquer le thème"
+4. Tout le site devient sombre
+
+### En tant que Développeur
 ```php
-// Get user preferences
+// Obtenir les préférences utilisateur
 $prefs = (new UserPreferences())->getPreferences($user_id);
-echo $prefs['background_mode']; // 'light', 'dark', or 'custom'
+echo $prefs['background_mode']; // 'light', 'dark', ou 'custom'
 
-// Change theme
+// Changer de thème
 (new UserPreferences())->setBackgroundMode($user_id, 'dark');
 
-// Upload custom background
+// Télécharger un arrière-plan personnalisé
 (new UserPreferences())->setCustomBackgroundImage($user_id, $path);
 ```
 
 ---
 
-## 🎯 Features Summary
+## 🎯 Résumé des Fonctionnalités
 
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Light Theme | ✅ Complete | Default, classic white |
-| Dark Theme | ✅ Complete | Full component styling |
-| Custom Images | ✅ Complete | Upload, preview, delete |
-| Image Upload | ✅ Complete | 5MB max, multi-format |
-| Auto Cleanup | ✅ Complete | Old images deleted |
-| Session Storage | ✅ Complete | Fast, no per-page DB query |
-| Settings Page | ✅ Complete | Beautiful UI with preview |
-| Navbar Button | ✅ Complete | Accessible from all pages |
-| Persistent | ✅ Complete | Saves to database |
-| Mobile Responsive | ✅ Complete | Works on all devices |
-| Accessible | ✅ Complete | Good contrast, WCAG compliant |
-| Secure | ✅ Complete | HTML escaping, file validation |
-
----
-
-## 🚦 Deployment Checklist
-
-- [x] Migration executed
-- [x] Model created
-- [x] Controller created
-- [x] Views created
-- [x] CSS updated
-- [x] Navigation updated
-- [x] Routes added
-- [x] Session handling added
-- [x] Upload directory created
-- [x] Documentation created
-- [ ] User testing (ready for testing)
+| Fonctionnalité | Statut | Notes |
+|----------------|--------|-------|
+| Thème Clair | ✅ Complet | Défaut, blanc classique |
+| Thème Sombre | ✅ Complet | Style complet des composants |
+| Images Personnalisées | ✅ Complet | Téléchargement, aperçu, suppression |
+| Téléchargement d'Image | ✅ Complet | 5MB max, multi-format |
+| Nettoyage Auto | ✅ Complet | Anciennes images supprimées |
+| Stockage Session | ✅ Complet | Rapide, pas de requête DB par page |
+| Page Paramètres | ✅ Complet | Interface magnifique avec aperçu |
+| Bouton Barre Navigation | ✅ Complet | Accessible depuis toutes les pages |
+| Persistant | ✅ Complet | Sauvegarde en base de données |
+| Responsive Mobile | ✅ Complet | Fonctionne sur tous les appareils |
+| Accessible | ✅ Complet | Bon contraste, conforme WCAG |
+| Sécurisé | ✅ Complet | Échappement HTML, validation fichier |
 
 ---
 
-## 📊 Database Verification
+## 🚦 Liste de Vérification de Déploiement
+
+- [x] Migration exécutée
+- [x] Modèle créé
+- [x] Contrôleur créé
+- [x] Vues créées
+- [x] CSS mis à jour
+- [x] Navigation mise à jour
+- [x] Routes ajoutées
+- [x] Gestion de session ajoutée
+- [x] Répertoire de téléchargement créé
+- [x] Documentation créée
+- [ ] Test utilisateur (prêt pour test)
+
+---
+
+## 📊 Vérification de Base de Données
 
 ```
-Table: user_preferences
-Columns: 6
-Primary Key: id
-Unique Constraints: user_id
-Foreign Keys: user_id → users(id)
-Indexes: background_mode
-Status: ✅ Verified and working
+Table : user_preferences
+Colonnes : 6
+Clé Primaire : id
+Contraintes Uniques : user_id
+Clés Étrangères : user_id → users(id)
+Index : background_mode
+Statut : ✅ Vérifié et fonctionnel
 ```
 
 ---
 
-## 🎓 Next Steps for Users
+## 🎓 Prochaines Étapes pour les Utilisateurs
 
-1. **First Time**: Go to Settings and select a theme
-2. **Personalization**: Upload a custom background image
-3. **Enjoyment**: Browse the site with your custom theme!
+1. **Première Fois** : Allez aux Paramètres et sélectionnez un thème
+2. **Personnalisation** : Téléchargez une image d'arrière-plan personnalisée
+3. **Plaisir** : Naviguez sur le site avec votre thème personnalisé !
 
 ---
 
-## 💡 Future Enhancement Ideas
+## 💡 Idées d'Amélioration Future
 
-- Theme scheduling (auto switch at specific times)
-- Community theme gallery
-- Theme import/export
-- Multiple custom images with rotation
-- Per-page theme override
-- Color theme customization
-- Animation effects
+- Programmation de thème (changement auto à des heures spécifiques)
+- Galerie de thèmes communautaires
+- Import/export de thème
+- Plusieurs images personnalisées avec rotation
+- Surcharge de thème par page
+- Personnalisation de couleurs de thème
+- Effets d'animation
 
 ---
 
 ## 📞 Support
 
-If issues arise:
-1. Check that JavaScript is enabled
-2. Verify image is under 5MB
-3. Ensure browser cache is cleared
-4. Try switching to Light theme
-5. Check browser console for errors
+En cas de problèmes :
+1. Vérifiez que JavaScript est activé
+2. Vérifiez que l'image est sous 5MB
+3. Assurez-vous que le cache du navigateur est vidé
+4. Essayez de passer au thème Clair
+5. Vérifiez la console du navigateur pour les erreurs
 
 ---
 
-**Implementation Date**: November 27, 2025
-**Status**: ✅ PRODUCTION READY
+**Date d'Implémentation** : 27 novembre 2025
+**Statut** : ✅ PRÊT POUR LA PRODUCTION

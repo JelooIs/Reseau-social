@@ -1,3 +1,4 @@
+
 # 🎉 Système de Gestion des Permissions - INSTALLATION RAPIDE
 
 ## ✅ Qu'est-ce qui a été implémenté
@@ -25,8 +26,8 @@ php test_permissions.php
 
 ### Étape 3: Accéder à l'Admin Panel (1 min)
 
-1. Connectez-vous avec votre compte admin
-2. Allez sur: `http://votresite.com/index.php?action=admin`
+1. Connectez-vous avec le compte admin
+2. Allez sur: `http://reseausocial/index.php?action=admin`
 3. Vous devriez voir 3 onglets: "Utilisateurs", "Rôles & Permissions", "Messages"
 
 ## 📊 Rôles Créés
