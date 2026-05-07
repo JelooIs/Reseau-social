@@ -1,4 +1,4 @@
-# Système de Gestion des Permissions - Installation et Utilisation
+# Installation et Utilisation
 
 ## Installation Rapide (WAMP)
 
